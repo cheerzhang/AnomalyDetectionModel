@@ -1,18 +1,15 @@
 Welcome to quick-anomaly-detector's documentation!
-===================================
+==================================================
 
-**quick-anomaly-detector** is a Python library that provides a collection of class to model of anomaly detection task.
+**quick-anomaly-detector** is a Python library that provides a collection of classes to model an anomaly detection task.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project and examples for the usage of the functions.
+Check out the :doc:`quick_start` section for further information.
 
-... toctree::
+.. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-   section1
-   section2
-   ...
+   quick_start
+   models
 
 Indices and tables
 ==================
