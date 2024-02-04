@@ -14,7 +14,7 @@ Check out the :doc:`quick_start` section for further information.
    :toctree: generated
    :nosignatures:
 
-   quick_anomaly_detector.AnomalyDetectionModel
+   quick_anomaly_detector.models.AnomalyDetectionModel
 
 Additional Information
 ----------------------
