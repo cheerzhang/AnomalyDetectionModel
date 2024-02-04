@@ -18,12 +18,42 @@ class AnomalyDetectionModel:
     Gaussian parameters, calculating p-values, selecting the threshold, and making predictions.
 
     Attributes:
-    - mu_train (ndarray): Mean vector of the training data.
-    - var_train (ndarray): Variance vector of the training data.
-    - p_values_train (ndarray): P-values for training data.
-    - p_values_val (ndarray): P-values for validation data.
-    - epsilon (float): Chosen threshold for anomaly detection.
-    - f1 (float): F1 score corresponding to the chosen threshold.
+    :param mu_train: Mean vector of the training data.
+    :type mu_train: ndarray
+
+    :param var_train: Variance vector of the training data.
+    :type var_train: ndarray
+
+    :param p_values_train: P-values for training data.
+    :type p_values_train: ndarray
+
+    :param p_values_val: P-values for validation data.
+    :type p_values_val: ndarray
+
+    :param epsilon: Chosen threshold for anomaly detection.
+    :type epsilon: float
+
+    :param f1: F1 score corresponding to the chosen threshold.
+    :type f1: float
+
+
+    .. code-block:: python
+
+        from quick_anomaly_detector.models import AnomalyDetectionModel  # Replace 'your_module' with the actual module name
+
+        # Load your datasets (X_train, X_val, y_val)
+        # ...
+
+        # Create an instance of AnomalyDetectionModel
+        model = AnomalyDetectionModel()
+
+        # Train the model
+        model.train(X_train, X_val, y_val)
+
+        # Predict anomalies in the validation dataset
+        anomalies = model.predict(X_val)
+
+        print(anomalies)
 
     .. note::
         The anomaly detection model assumes that the input data follows a Gaussian distribution.

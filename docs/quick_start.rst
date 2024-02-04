@@ -14,10 +14,11 @@ You can install quick-anomaly-detector from PyPI using the following command:
 
 PyPI link: https://pypi.org/project/quick-anomaly-detector/
 
-See also
+
+Quick Examples
 -----------------
 
-Examples:
+Guissian Based Anomaly Model:
 
 .. code-block:: python
 

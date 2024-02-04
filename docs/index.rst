@@ -6,8 +6,7 @@ Welcome to quick-anomaly-detector's documentation!
 Check out the :doc:`quick_start` section for further information.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 4
 
    quick_start
    modules.rst
