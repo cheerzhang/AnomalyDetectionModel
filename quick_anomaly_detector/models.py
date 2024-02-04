@@ -133,32 +133,32 @@ import numpy as np
 
 class KMeansModel:
     """
+    KMeansModel
+
     The `KMeansModel` class is a Python implementation of the K-means clustering algorithm. Clustering is a type of unsupervised machine learning that partitions data into groups (clusters) based on similarity. The K-means algorithm aims to divide the data into K clusters, where each cluster is represented by its centroid.
 
     To use the `KMeansModel` class, follow these steps:
 
     1. Create an instance of the class with an optional parameter `K` (number of clusters, default is 3).
 
-        ```python
-        from kmeans_model import KMeansModel
+        .. code-block:: python
+            from quick_anomaly_detector.models import KMeansModel
 
-        kmeans = KMeansModel(K=3)
-        ```
+            kmeans = KMeansModel(K=3)
+
     2. Train the model on your data using the `train` method.
 
-        ```python
-        kmeans.train(X, max_iters=10)
-        ```
+        .. code-block:: python
+            kmeans.train(X, max_iters=10)
 
-    - `X`: Input data matrix.
-    - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
+        - `X`: Input data matrix.
+        - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
 
     3. Access the resulting centroids and labels.
 
-        ```python
-        centroids = kmeans.centroids
-        labels = kmeans.labels
-        ```
+        .. code-block:: python
+            centroids = kmeans.centroids
+            labels = kmeans.labels
     """
     def __init__(self, K=3):
         """

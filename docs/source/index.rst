@@ -15,6 +15,7 @@ Check out the :doc:`quick_start` section for further information.
    :nosignatures:
 
    quick_anomaly_detector.models.AnomalyDetectionModel
+   quick_anomaly_detector.models.KMeansModel
 
 Additional Information
 ----------------------
