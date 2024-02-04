@@ -13,8 +13,8 @@ pypi page link is here:(https://pypi.org/project/df-csv-excel/)
 ### Quick Start
 #### Installation
 
-You can install `AnomalyDetectionModel` using pip:
+You can install `Anomaly DetectionModel` using pip:
 
 ```
-pip install AnomalyDetectionModel
+pip install quick-anomaly-detector
 ```

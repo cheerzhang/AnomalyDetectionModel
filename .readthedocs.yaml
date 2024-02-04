@@ -1,0 +1,12 @@
+# .readthedocs.yaml
+
+version: 2
+
+sphinx:
+  configuration: docs/source/conf.py
+  fail_on_warning: true
+
+python:
+  version: 3.11
+  install:
+    - requirements: requirements.txt
