@@ -129,8 +129,6 @@ class AnomalyDetectionModel:
 #########################################
 #          K-Means Cluster              #
 #########################################
-import numpy as np
-
 class KMeansModel:
     """
     KMeansModel
@@ -151,7 +149,7 @@ class KMeansModel:
 
     .. code-block:: python
 
-        kmeans.train(X, max_iters=10)
+        centroids, labels = kmeans.train(X, max_iters=10)
 
         - `X`: Input data matrix.
         - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
@@ -162,7 +160,15 @@ class KMeansModel:
 
         centroids = kmeans.centroids
         labels = kmeans.labels
+
+    4. Optionally, perform image compression using the `image_compression` method.
+
+    .. code-block:: python
+
+        compressed_img = kmeans.image_compression(image_path, color_K=16, max_iters=10)
+
     """
+
     def __init__(self, K=3):
         """
         Initialize a KMeansModel instance.
@@ -170,16 +176,34 @@ class KMeansModel:
         Parameters:
             K (int): Number of centroids (clusters). Default is 3.
         """
-        self.centroids = []
-        self.labels = []
         self.K = K
 
     def kMeans_init_centroids(self, X, K):
+        """
+        Randomly initialize centroids.
+
+        Parameters:
+            X (ndarray): Input data matrix.
+            K (int): Number of centroids.
+
+        Returns:
+            ndarray: Initialized centroids.
+        """
         randidx = np.random.permutation(X.shape[0])
         centroids = X[randidx[:K]]
         return centroids
 
     def find_closest_centroids(self, X, centroids):
+        """
+        Find the closest centroid for each example.
+
+        Parameters:
+            X (ndarray): Input data matrix.
+            centroids (ndarray): Current centroids.
+
+        Returns:
+            ndarray: Index of the closest centroid for each example.
+        """
         K = centroids.shape[0]
         idx = np.zeros(X.shape[0], dtype=int)
         for i in range(X.shape[0]):
@@ -188,6 +212,17 @@ class KMeansModel:
         return idx
 
     def compute_centroids(self, X, idx, K):
+        """
+        Compute new centroids based on assigned examples.
+
+        Parameters:
+            X (ndarray): Input data matrix.
+            idx (ndarray): Index of the closest centroid for each example.
+            K (int): Number of centroids.
+
+        Returns:
+            ndarray: New centroids.
+        """
         m, n = X.shape
         centroids = np.zeros((K, n))
         for k in range(K):
@@ -203,8 +238,9 @@ class KMeansModel:
             X (ndarray): Input data matrix.
             K (int): Number of centroids (clusters). Default is 3.
             max_iters (int): Maximum number of iterations. Default is 10.
+
         Returns:
-            ndarray: Index of each data point's assigned cluster.
+            tuple: Resulting centroids and index of each data point's assigned cluster.
         """
         initial_centroids = self.kMeans_init_centroids(X, K)
         m, n = X.shape
@@ -215,9 +251,27 @@ class KMeansModel:
         for i in range(max_iters):
             idx = self.find_closest_centroids(X, centroids)
             centroids = self.compute_centroids(X, idx, K)
-        self.centroids = centroids
-        self.labels = idx
-        return idx
+        return centroids, idx
+    
+    def image_compression(self, image_path, color_K=16, max_iters=10):
+        """
+        Perform image compression using K-means clustering.
+
+        Parameters:
+            image_path (str): Path to the input image file.
+            color_K (int): Number of colors for compression. Default is 16.
+            max_iters (int): Maximum number of iterations for K-means. Default is 10.
+
+        Returns:
+            ndarray: Compressed image.
+        """
+        original_img = plt.imread(image_path)
+        X_img = np.reshape(original_img, (original_img.shape[0] * original_img.shape[1], 4))
+        centroids, idx = self.train(X_img, color_K, max_iters)
+        X_recovered = centroids[idx, :]
+        X_recovered = np.reshape(X_recovered, original_img.shape)
+        return X_recovered
+
 
 
 
