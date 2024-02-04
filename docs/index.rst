@@ -5,12 +5,12 @@ Welcome to quick-anomaly-detector's documentation!
 
 Check out the :doc:`quick_start` section for further information.
 
+.. toctree::
+   :maxdepth: 4
 
-.. autosummary::
-   :toctree: generated
-   :nosignatures:
+   index
+   quick_start
 
-   quick-anomaly-detector.AnomalyDetectionModel
 
 
 Indices and tables
