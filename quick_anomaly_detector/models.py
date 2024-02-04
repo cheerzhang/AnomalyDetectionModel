@@ -17,24 +17,14 @@ class AnomalyDetectionModel:
     Gaussian parameters, calculating p-values, selecting the threshold, and making predictions.
 
     Attributes:
-        - **mu_train** (*ndarray*):
-        Mean vector of the training data.
+        - **mu_train** (*ndarray*): Mean vector of the training data.
+        - **var_train** (*ndarray*): Variance vector of the training data.
+        - **p_values_train** (*ndarray*): P-values for training data.
+        - **p_values_val** (*ndarray*): P-values for validation data.
+        - **epsilon** (*float*): Chosen threshold for anomaly detection.
+        - **f1** (*float*): F1 score corresponding to the chosen threshold.
 
-        - **var_train** (*ndarray*):
-        Variance vector of the training data.
-
-        - **p_values_train** (*ndarray*):
-        P-values for training data.
-
-        - **p_values_val** (*ndarray*):
-        P-values for validation data.
-
-        - **epsilon** (*float*):
-        Chosen threshold for anomaly detection.
-
-        - **f1** (*float*):
-        F1 score corresponding to the chosen threshold.
-
+    Example:
     .. code-block:: python
 
         from quick_anomaly_detector.models import AnomalyDetectionModel
@@ -122,11 +112,13 @@ class AnomalyDetectionModel:
     def predict(self, X):
         """
         Predict outliers in the input data.
-
-            :param X: Data matrix for prediction.
+        
+        Parameters:
+            :param X: Input data matrix.
             :type X: ndarray
 
-            :return: Boolean array indicating outliers.
+        Returns:
+            :return: Boolean array indicating whether each sample is an outlier.
             :rtype: ndarray
         """
         p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
