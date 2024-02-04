@@ -17,23 +17,23 @@ class AnomalyDetectionModel:
     Gaussian parameters, calculating p-values, selecting the threshold, and making predictions.
 
     Attributes:
-        :param mu_train: Mean vector of the training data.
-        :type mu_train: ndarray
+        - **mu_train** (*ndarray*):
+        Mean vector of the training data.
 
-        :param var_train: Variance vector of the training data.
-        :type var_train: ndarray
+        - **var_train** (*ndarray*):
+        Variance vector of the training data.
 
-        :param p_values_train: P-values for training data.
-        :type p_values_train: ndarray
+        - **p_values_train** (*ndarray*):
+        P-values for training data.
 
-        :param p_values_val: P-values for validation data.
-        :type p_values_val: ndarray
+        - **p_values_val** (*ndarray*):
+        P-values for validation data.
 
-        :param epsilon: Chosen threshold for anomaly detection.
-        :type epsilon: float
+        - **epsilon** (*float*):
+        Chosen threshold for anomaly detection.
 
-        :param f1: F1 score corresponding to the chosen threshold.
-        :type f1: float
+        - **f1** (*float*):
+        F1 score corresponding to the chosen threshold.
 
     .. code-block:: python
 
