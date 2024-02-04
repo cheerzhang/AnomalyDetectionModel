@@ -92,6 +92,15 @@ class AnomalyDetectionModel:
         self.epsilon, self.f1 = self.select_threshold(y_val, self.p_values_val)
 
     def predict(self, X):
+        """
+        Predict outliers in the input data.
+
+        :param X: Data matrix for prediction.
+        :type X: ndarray
+
+        :return: Boolean array indicating outliers.
+        :rtype: ndarray
+        """
         p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
         outliers = p_values < self.epsilon
         return outliers

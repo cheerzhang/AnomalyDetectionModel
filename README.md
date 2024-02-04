@@ -7,8 +7,8 @@ AnomalyDetectionModels
 
 `AnomalyDetectionModel` is a python library that includs some simple implementation of an anomaly detection model.   
 For more details, please refer to the document page:   
-[Document](https://read-doc-1.readthedocs.io/en/main/index.html)   
-pypi page link is here:(https://pypi.org/project/df-csv-excel/)   
+[Document](https://anomalydetectionmodel.readthedocs.io/en/latest/index.html)   
+pypi page link is here:(https://pypi.org/project/quick-anomaly-detector/)   
 
 ### Quick Start
 #### Installation
@@ -17,4 +17,20 @@ You can install `Anomaly DetectionModel` using pip:
 
 ```
 pip install quick-anomaly-detector
+```
+
+Quick Start:   
+```
+from quick_anomaly_detector.models import AnomalyDetectionModel
+
+
+# Load your datasets (X_train, X_val, y_val)
+model = AnomalyDetectionModel()
+
+# Train the model
+model.train(X_train, X_val, y_val)
+
+# Predict anomalies in the validation dataset
+anomalies = model.predict(X_val)
+
 ```
