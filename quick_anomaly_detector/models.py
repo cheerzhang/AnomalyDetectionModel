@@ -10,7 +10,32 @@ from scipy.stats import multivariate_normal
 
 # select epsilon base on F1
 class AnomalyDetectionModel:
+    """
+    Anomaly Detection Model using Gaussian Distribution.
+
+    This class provides a simple implementation of an anomaly detection model
+    based on the Gaussian distribution. It includes methods for estimating
+    Gaussian parameters, calculating p-values, selecting the threshold, and making predictions.
+
+    Attributes:
+    - mu_train (ndarray): Mean vector of the training data.
+    - var_train (ndarray): Variance vector of the training data.
+    - p_values_train (ndarray): P-values for training data.
+    - p_values_val (ndarray): P-values for validation data.
+    - epsilon (float): Chosen threshold for anomaly detection.
+    - f1 (float): F1 score corresponding to the chosen threshold.
+
+    .. note::
+        The anomaly detection model assumes that the input data follows a Gaussian distribution.
+
+    .. warning::
+        This class is designed for educational purposes and may not be suitable for all types of data.
+    """
+
     def __init__(self):
+        """
+        Initialize the AnomalyDetectionModel.
+        """
         self.mu_train = 0
         self.var_train = 0
         self.p_values_train = 0
@@ -49,6 +74,18 @@ class AnomalyDetectionModel:
     
 
     def train(self, X_train, X_val, y_val):
+        """
+        Train the AnomalyDetectionModel.
+
+        :param X_train: Training data matrix.
+        :type X_train: ndarray
+
+        :param X_val: Validation data matrix.
+        :type X_val: ndarray
+
+        :param y_val: Ground truth labels for validation data.
+        :type y_val: ndarray
+        """
         self.mu_train, self.var_train = self.estimate_gaussian(X_train)
         self.p_values_train = self.calculate_p_value(X_train, self.mu_train, self.var_train)
         self.p_values_val = self.calculate_p_value(X_val, self.mu_train, self.var_train)
