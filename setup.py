@@ -6,11 +6,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='anomaly-detector',
-    version='0.1.0',
+    name='quick-anomaly-detector',
+    version='0.1.1',
     author="ZhangLe",
     author_email="zhangle@gmail.com",
-    description="models class for Anomaly Detection",
+    description="models class for quick Anomaly Detection",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/cheerzhang/AnomalyDetectionModel",
