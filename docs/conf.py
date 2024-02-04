@@ -44,3 +44,9 @@ epub_show_urls = 'footnote'
 
 # -- Options for autodoc extension ----------------------------------------
 autodoc_member_order = 'bysource'
+
+
+def setup(app):
+    # Install dependencies before building the documentation
+    from subprocess import call
+    call('pip install -r {}'.format('../requirements.txt').split(' '))
