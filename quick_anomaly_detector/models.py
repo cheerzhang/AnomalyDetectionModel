@@ -17,23 +17,23 @@ class AnomalyDetectionModel:
     Gaussian parameters, calculating p-values, selecting the threshold, and making predictions.
 
     Attributes:
-        :ivar mu_train: Mean vector of the training data.
-        :vartype mu_train: ndarray
+        :param mu_train: Mean vector of the training data.
+        :type mu_train: ndarray
 
-        :ivar var_train: Variance vector of the training data.
-        :vartype var_train: ndarray
+        :param var_train: Variance vector of the training data.
+        :type var_train: ndarray
 
-        :ivar p_values_train: P-values for training data.
-        :vartype p_values_train: ndarray
+        :param p_values_train: P-values for training data.
+        :type p_values_train: ndarray
 
-        :ivar p_values_val: P-values for validation data.
-        :vartype p_values_val: ndarray
+        :param p_values_val: P-values for validation data.
+        :type p_values_val: ndarray
 
-        :ivar epsilon: Chosen threshold for anomaly detection.
-        :vartype epsilon: float
+        :param epsilon: Chosen threshold for anomaly detection.
+        :type epsilon: float
 
-        :ivar f1: F1 score corresponding to the chosen threshold.
-        :vartype f1: float
+        :param f1: F1 score corresponding to the chosen threshold.
+        :type f1: float
 
     .. code-block:: python
 
@@ -105,14 +105,14 @@ class AnomalyDetectionModel:
         """
         Train the AnomalyDetectionModel.
 
-        :param X_train: Training data matrix.
-        :type X_train: ndarray
+            :param X_train: Training data matrix.
+            :type X_train: ndarray
 
-        :param X_val: Validation data matrix.
-        :type X_val: ndarray
+            :param X_val: Validation data matrix.
+            :type X_val: ndarray
 
-        :param y_val: Ground truth labels for validation data.
-        :type y_val: ndarray
+            :param y_val: Ground truth labels for validation data.
+            :type y_val: ndarray
         """
         self.mu_train, self.var_train = self.estimate_gaussian(X_train)
         self.p_values_train = self.calculate_p_value(X_train, self.mu_train, self.var_train)
@@ -123,11 +123,11 @@ class AnomalyDetectionModel:
         """
         Predict outliers in the input data.
 
-        :param X: Data matrix for prediction.
-        :type X: ndarray
+            :param X: Data matrix for prediction.
+            :type X: ndarray
 
-        :return: Boolean array indicating outliers.
-        :rtype: ndarray
+            :return: Boolean array indicating outliers.
+            :rtype: ndarray
         """
         p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
         outliers = p_values < self.epsilon
