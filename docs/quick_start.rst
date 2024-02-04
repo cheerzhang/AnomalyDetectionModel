@@ -35,8 +35,3 @@ Guissian Based Anomaly Model:
    anomalies = model.predict(X_val)
 
 
-.. autosummary::
-   :toctree: generated
-   :nosignatures:
-
-   quick-anomaly-detector.AnomalyDetectionModel
