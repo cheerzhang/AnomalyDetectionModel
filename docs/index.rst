@@ -11,10 +11,11 @@ Check out the :doc:`quick_start` section for further information.
    quick_start
 
 .. autosummary::
-   :toctree: _autosummary
-   :recursive:
+   :toctree: generated
+   :nosignatures:
 
-   quick-anomaly-detector
+   quick-anomaly-detector.AnomalyDetectionModel
+
 
 Indices and tables
 ==================
