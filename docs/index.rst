@@ -9,7 +9,12 @@ Check out the :doc:`quick_start` section for further information.
    :maxdepth: 4
 
    quick_start
-   modules.rst
+
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
+
+   quick-anomaly-detector
 
 Indices and tables
 ==================

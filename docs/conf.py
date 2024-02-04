@@ -23,6 +23,8 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
 ]
+autosummary_generate = True
+
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
@@ -44,5 +46,3 @@ epub_show_urls = 'footnote'
 # -- Options for autodoc extension ----------------------------------------
 autodoc_member_order = 'bysource'
 
-# -- Generate Autosummary --------------
-autosummary_generate = True

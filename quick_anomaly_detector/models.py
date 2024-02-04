@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 
-
 #########################################
 #   Gaussian Based Anomaly Detection    #
 #########################################
@@ -18,28 +17,27 @@ class AnomalyDetectionModel:
     Gaussian parameters, calculating p-values, selecting the threshold, and making predictions.
 
     Attributes:
-    :param mu_train: Mean vector of the training data.
-    :type mu_train: ndarray
+        :ivar mu_train: Mean vector of the training data.
+        :vartype mu_train: ndarray
 
-    :param var_train: Variance vector of the training data.
-    :type var_train: ndarray
+        :ivar var_train: Variance vector of the training data.
+        :vartype var_train: ndarray
 
-    :param p_values_train: P-values for training data.
-    :type p_values_train: ndarray
+        :ivar p_values_train: P-values for training data.
+        :vartype p_values_train: ndarray
 
-    :param p_values_val: P-values for validation data.
-    :type p_values_val: ndarray
+        :ivar p_values_val: P-values for validation data.
+        :vartype p_values_val: ndarray
 
-    :param epsilon: Chosen threshold for anomaly detection.
-    :type epsilon: float
+        :ivar epsilon: Chosen threshold for anomaly detection.
+        :vartype epsilon: float
 
-    :param f1: F1 score corresponding to the chosen threshold.
-    :type f1: float
-
+        :ivar f1: F1 score corresponding to the chosen threshold.
+        :vartype f1: float
 
     .. code-block:: python
 
-        from quick_anomaly_detector.models import AnomalyDetectionModel  # Replace 'your_module' with the actual module name
+        from quick_anomaly_detector.models import AnomalyDetectionModel
 
         # Load your datasets (X_train, X_val, y_val)
         # ...
