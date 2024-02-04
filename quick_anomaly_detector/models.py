@@ -6,7 +6,6 @@ from scipy.stats import multivariate_normal
 #########################################
 #   Gaussian Based Anomaly Detection    #
 #########################################
-# sphinx-apidoc -o docs quick_anomaly_detector 
 # select epsilon base on F1
 class AnomalyDetectionModel:
     """
@@ -112,7 +111,7 @@ class AnomalyDetectionModel:
     def predict(self, X):
         """
         Predict outliers in the input data.
-        
+
         Parameters:
             :param X: Input data matrix.
             :type X: ndarray
@@ -124,3 +123,99 @@ class AnomalyDetectionModel:
         p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
         outliers = p_values < self.epsilon
         return outliers
+
+
+
+#########################################
+#          K-Means Cluster              #
+#########################################
+import numpy as np
+
+class KMeansModel:
+    """
+    The `KMeansModel` class is a Python implementation of the K-means clustering algorithm. Clustering is a type of unsupervised machine learning that partitions data into groups (clusters) based on similarity. The K-means algorithm aims to divide the data into K clusters, where each cluster is represented by its centroid.
+
+    To use the `KMeansModel` class, follow these steps:
+
+    1. Create an instance of the class with an optional parameter `K` (number of clusters, default is 3).
+
+        ```python
+        from kmeans_model import KMeansModel
+
+        kmeans = KMeansModel(K=3)
+        ```
+    2. Train the model on your data using the `train` method.
+
+        ```python
+        kmeans.train(X, max_iters=10)
+        ```
+
+    - `X`: Input data matrix.
+    - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
+
+    3. Access the resulting centroids and labels.
+
+        ```python
+        centroids = kmeans.centroids
+        labels = kmeans.labels
+        ```
+    """
+    def __init__(self, K=3):
+        """
+        Initialize a KMeansModel instance.
+
+        Parameters:
+            K (int): Number of centroids (clusters). Default is 3.
+        """
+        self.centroids = []
+        self.labels = []
+        self.K = K
+
+    def kMeans_init_centroids(self, X, K):
+        randidx = np.random.permutation(X.shape[0])
+        centroids = X[randidx[:K]]
+        return centroids
+
+    def find_closest_centroids(self, X, centroids):
+        K = centroids.shape[0]
+        idx = np.zeros(X.shape[0], dtype=int)
+        for i in range(X.shape[0]):
+            distances = np.linalg.norm(X[i] - centroids, axis=1)
+            idx[i] = np.argmin(distances)
+        return idx
+
+    def compute_centroids(self, X, idx, K):
+        m, n = X.shape
+        centroids = np.zeros((K, n))
+        for k in range(K):
+            indices = (idx == k)
+            centroids[k, :] = np.mean(X[indices, :], axis=0)
+        return centroids
+
+    def train(self, X, K=3, max_iters=10):
+        """
+        Train the KMeansModel.
+
+        Parameters:
+            X (ndarray): Input data matrix.
+            K (int): Number of centroids (clusters). Default is 3.
+            max_iters (int): Maximum number of iterations. Default is 10.
+        """
+        initial_centroids = self.kMeans_init_centroids(X, K)
+        m, n = X.shape
+        K = initial_centroids.shape[0]
+        centroids = initial_centroids
+        previous_centroids = centroids  
+        idx = np.zeros(m)  
+        for i in range(max_iters):
+            idx = self.find_closest_centroids(X, centroids)
+            centroids = self.compute_centroids(X, idx, K)
+        self.centroids = centroids
+        self.labels = idx
+
+
+
+
+
+        
+    
