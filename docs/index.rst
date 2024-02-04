@@ -7,9 +7,10 @@ Check out the :doc:`quick_start` section for further information.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
    quick_start
-   models
+   modules.rst
 
 Indices and tables
 ==================

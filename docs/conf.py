@@ -18,10 +18,9 @@ version = '0.1.1'
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
 ]
 
@@ -45,8 +44,5 @@ epub_show_urls = 'footnote'
 # -- Options for autodoc extension ----------------------------------------
 autodoc_member_order = 'bysource'
 
-
-def setup(app):
-    # Install dependencies before building the documentation
-    from subprocess import call
-    call('pip install -r {}'.format('../requirements.txt').split(' '))
+# -- Generate Autosummary --------------
+autosummary_generate = True

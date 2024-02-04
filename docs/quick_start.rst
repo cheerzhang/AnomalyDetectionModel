@@ -16,6 +16,3 @@ PyPI link: https://pypi.org/project/quick-anomaly-detector/
 
 See also
 -----------------
-
-
-

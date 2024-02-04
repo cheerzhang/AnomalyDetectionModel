@@ -7,7 +7,7 @@ from scipy.stats import multivariate_normal
 #########################################
 #   Gaussian Based Anomaly Detection    #
 #########################################
-
+# sphinx-apidoc -o docs quick_anomaly_detector 
 # select epsilon base on F1
 class AnomalyDetectionModel:
     """
