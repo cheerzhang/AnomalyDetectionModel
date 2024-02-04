@@ -1,27 +1,40 @@
-# docs/source/conf.py
+# Configuration file for the Sphinx documentation builder.
 
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../../'))  # Adjust the path based on your project structure
+# -- Project information
 
-project = 'Your Project Name'
-author = 'Your Name'
+project = 'quick-anomaly-detector'
+copyright = '2024, LeZhang'
+author = 'LeZhang'
 
-# -- General configuration ------------------------------------------------
+release = '0.1'
+version = '0.1.1'
+
+# -- General configuration
 
 extensions = [
+    'sphinx.ext.duration',
+    'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.intersphinx',
 ]
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+}
+intersphinx_disabled_domains = ['std']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-# -- Options for HTML output ----------------------------------------------
+# -- Options for HTML output
 
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
-# -- Options for autodoc extension ----------------------------------------
+# -- Options for EPUB output
+epub_show_urls = 'footnote'
 
+# -- Options for autodoc extension ----------------------------------------
 autodoc_member_order = 'bysource'
