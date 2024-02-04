@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='anomaly-detection',
+    name='anomaly-detector',
     version='0.1.0',
     author="ZhangLe",
     author_email="zhangle@gmail.com",
