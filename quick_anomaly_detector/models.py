@@ -141,24 +141,27 @@ class KMeansModel:
 
     1. Create an instance of the class with an optional parameter `K` (number of clusters, default is 3).
 
-        .. code-block:: python
-            from quick_anomaly_detector.models import KMeansModel
+    .. code-block:: python
 
-            kmeans = KMeansModel(K=3)
+        from quick_anomaly_detector.models import KMeansModel
+
+        kmeans = KMeansModel(K=3)
 
     2. Train the model on your data using the `train` method.
 
-        .. code-block:: python
-            kmeans.train(X, max_iters=10)
+    .. code-block:: python
+
+        kmeans.train(X, max_iters=10)
 
         - `X`: Input data matrix.
         - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
 
     3. Access the resulting centroids and labels.
 
-        .. code-block:: python
-            centroids = kmeans.centroids
-            labels = kmeans.labels
+    .. code-block:: python
+
+        centroids = kmeans.centroids
+        labels = kmeans.labels
     """
     def __init__(self, K=3):
         """
@@ -200,6 +203,8 @@ class KMeansModel:
             X (ndarray): Input data matrix.
             K (int): Number of centroids (clusters). Default is 3.
             max_iters (int): Maximum number of iterations. Default is 10.
+        Returns:
+            ndarray: Index of each data point's assigned cluster.
         """
         initial_centroids = self.kMeans_init_centroids(X, K)
         m, n = X.shape
@@ -212,6 +217,7 @@ class KMeansModel:
             centroids = self.compute_centroids(X, idx, K)
         self.centroids = centroids
         self.labels = idx
+        return idx
 
 
 
