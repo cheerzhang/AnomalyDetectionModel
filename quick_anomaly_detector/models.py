@@ -151,8 +151,8 @@ class KMeansModel:
 
         centroids, labels = kmeans.train(X, max_iters=10)
 
-        - `X`: Input data matrix.
-        - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
+    - `X`: Input data matrix.
+    - `max_iters`: Maximum number of iterations for the K-means algorithm (default is 10).
 
     3. Access the resulting centroids and labels.
 
