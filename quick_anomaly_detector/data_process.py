@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 import pandas as pd
 import numpy as np
-
+import torch
 
 #########################################
 #             Histogram graph           #
@@ -143,3 +143,50 @@ def apply_transformations(df, column_name):
     transformed_columns = [column_name, f'log_{column_name}', f'square2_{column_name}', f'square0.5_{column_name}']
     
     return transformed_columns
+
+
+
+
+##################################################
+#         check valid tensor                      #
+##################################################
+def check_valid_tensor_data(input_tensor):
+    """
+    Perform checks on the input tensor.
+    
+    :param input_tensor: Input tensor to be checked.
+    :type input_tensor: torch.Tensor
+    
+    :return: True if input passes all checks, False otherwise.
+    :rtype: bool
+    
+    :return: Message indicating the result of the checks.
+    :rtype: str
+    
+    Example: 
+
+    .. code-block:: python
+
+        from quick_anomaly_detector.data_process import check_valid_tensor_data
+
+        input_tensor = torch.tensor([1.0, 2.0, float('nan'), 4.0])  # Example tensor with NaN
+        valid, message = check_valid_tensor_data(input_tensor)
+        print(valid, message)
+    """
+    # Check if input_tensor is a torch.Tensor
+    if not isinstance(input_tensor, torch.Tensor):
+        return False, "Input is not a torch.Tensor"
+    
+    # Check if input_tensor contains NaN or infinite values
+    if torch.isnan(input_tensor).any() or torch.isinf(input_tensor).any():
+        return False, "Input contains NaN or infinite values"
+    
+    # Check if input_tensor is of floating-point data type
+    if input_tensor.dtype not in [torch.float32, torch.float64]:
+        return False, "Input is not of floating-point data type"
+    
+    # Check if input_tensor has a valid shape (not empty)
+    if input_tensor.numel() == 0:
+        return False, "Input tensor has an empty shape"
+    
+    return True, "Input passes all checks"

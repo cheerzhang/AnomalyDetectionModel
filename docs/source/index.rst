@@ -14,9 +14,13 @@ Check out the :doc:`quick_start` section for further information.
    :toctree: generated
    :nosignatures:
 
-   quick_anomaly_detector.data_process.graph_scatter
+
    quick_anomaly_detector.data_process.apply_transformations
+   quick_anomaly_detector.data_process.check_valid_tensor_data
+
+   quick_anomaly_detector.data_process.graph_scatter
    quick_anomaly_detector.data_process.graph_multiple_histograms
+
    quick_anomaly_detector.models.AnomalyDetectionModel
    quick_anomaly_detector.models.KMeansModel
 

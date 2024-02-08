@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='quick-anomaly-detector',
-    version='0.1.10',
+    version='0.1.11',
     author="ZhangLe",
     author_email="zhangle@gmail.com",
     description="models class for quick Anomaly Detection",
@@ -29,7 +29,8 @@ setuptools.setup(
         'plotly >= 5.18.0',
         'matplotlib >= 3.7.1',
         'SciPy >= 1.11.4',
-        'cdifflib >= 1.2.6'
+        'cdifflib >= 1.2.6',
+        'torch >= 2.2.0'
     ],
     python_requires=">=3.9",
 )
