@@ -5,33 +5,59 @@ import pandas as pd
 #########################################
 #             Histogram graph           #
 #########################################
-def graph_histogram(df, x_column, bin_number=10):
+def graph_multiple_histograms(df, columns, layout=(2, 2), bin_numbers=None):
     """
-    Plot a histogram of a specified column from a DataFrame.
+    Plot multiple histograms of specified columns from a DataFrame.
 
         :param df: The pandas DataFrame containing the data.
         :type df: pandas.DataFrame
-        :param x_column: The name of the column to be plotted.
-        :type x_column: str
-        :param bin_number: The number of bins to use for the histogram. Default is 10.
-        :type bin_number: int, optional
-        :return: The matplotlib Figure object containing the histogram plot.
-        :rtype: matplotlib.figure.Figure
+        
+        :param columns: List of column names to be plotted.
+        :type columns: list
+        
+        :param layout: Tuple specifying the layout dimensions of subplots. Default is (2, 2).
+        :type layout: tuple, optional
+        
+        :param bin_numbers: List of integers specifying the number of bins for each column.
+        :type bin_numbers: list, optional
     
-
     Example:
     
-     .. code-block:: python
+    .. code-block:: python
 
-        >>> import pandas as pd
-        >>> import matplotlib.pyplot as plt
-        >>> df = pd.DataFrame({'age': [25, 30, 35, 40, 45, 50]})
-        >>> fig = graph_histogram(df, 'age', bin_number=5)
-        >>> plt.show()
+        from quick_anomaly_detector.data_process import graph_multiple_histograms
+        
+        columns_to_plot = ['a', 'b', 'c', 'd']
+        bin_numbers = [10, 20, 15, 10]  # Example list of bin numbers corresponding to each column
+        fig = graph_multiple_histograms(df, columns_to_plot, layout=(2, 2), bin_numbers=bin_numbers)
+        plt.show()
+    
     """
-    fig, ax = plt.subplots()
-    ax.hist(df[x_column], bins=bin_number)
-    ax.set_xlabel(x_column)
-    ax.set_ylabel("Frequency")
-    ax.set_title(f"Histogram of {x_column}")
+    num_plots = len(columns)
+    num_rows, num_cols = layout
+    total_plots = num_rows * num_cols
+
+    if num_plots > total_plots:
+        raise ValueError("Number of columns exceeds the available space in the layout.")
+
+    if bin_numbers is None:
+        bin_numbers = [10] * num_plots
+    elif len(bin_numbers) != num_plots:
+        raise ValueError("Length of bin_numbers must match the number of columns.")
+
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=(14, 10))
+    axes = axes.ravel()
+
+    for i, (column, bins) in enumerate(zip(columns, bin_numbers)):
+        ax = axes[i]
+        ax.hist(df[column], bins=bins)
+        ax.set_xlabel(column)
+        ax.set_ylabel("Frequency")
+        ax.set_title(f"Histogram of {column}")
+
+    # Hide empty subplots
+    for j in range(num_plots, total_plots):
+        axes[j].axis('off')
+
+    plt.tight_layout()
     return fig
