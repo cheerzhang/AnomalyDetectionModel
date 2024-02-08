@@ -14,10 +14,9 @@ Check out the :doc:`quick_start` section for further information.
    :toctree: generated
    :nosignatures:
 
-   quick_anomaly_detector.data_process.apply_transformations
-   quick_anomaly_detector.data_process.graph_multiple_histograms
-   quick_anomaly_detector.models.AnomalyDetectionModel
-   quick_anomaly_detector.models.KMeansModel
+   quick_anomaly_detector.data_process.*
+   quick_anomaly_detector.models.*
+
 
 Additional Information
 ----------------------

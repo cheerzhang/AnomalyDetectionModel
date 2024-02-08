@@ -88,7 +88,7 @@ def graph_scatter(df, x_column, y_column, color_column):
         from quick_anomaly_detector.data_process import graph_scatter
 
         df = pd.DataFrame({'x_column': [1, 2, 3], 'y_column': [4, 5, 6], 'color_column': ['red', 'blue', 'green']})
-        fig = graph_scatter(df)
+        fig = graph_scatter(df, 'x_column', 'y_column', 'color_column')
         plt.show()
     
     .. note:: 
