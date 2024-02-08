@@ -243,6 +243,8 @@ class TrainAnomalyNN:
     - model (AnomalyDetectionNN): The trained anomaly detection neural network model.
     - optimizer (torch.optim.Optimizer): The optimizer used for training.
     - criterion (torch.nn.Module): The loss function used for training.
+    - train_loss_arr (numpy.ndarray): The traning loss
+    - valid_loss_arr (numpy.ndarray): The valid loss
     - train_min_values (numpy.ndarray): The minimum values of each feature in the training dataset.
     - train_max_values (numpy.ndarray): The maximum values of each feature in the training dataset.
 
@@ -273,6 +275,10 @@ class TrainAnomalyNN:
         self.model = None
         self.optimizer = None
         self.criterion = None
+        self.stop_step = 0
+        self.best_loss = 0
+        self.train_loss_arr = []
+        self.valid_loss_arr = []
         self.train_min_values = None
         self.train_max_values = None
     
@@ -333,7 +339,8 @@ class TrainAnomalyNN:
                     loss.backward()
                     self.optimizer.step()
                     running_loss += loss.item() * inputs.size(0)
-            # epoch_loss = running_loss / len(train_loader.dataset)
+            epoch_loss = running_loss / len(train_loader.dataset)
+            self.train_loss_arr.append(epoch_loss)
             # print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {epoch_loss:.4f}") # traning loss
             # Evaluate validation loss
             with torch.no_grad():
@@ -344,12 +351,15 @@ class TrainAnomalyNN:
                         loss = self.criterion(outputs, inputs)
                         valid_loss += loss.item() * inputs.size(0)
                 valid_loss /= len(valid_loader.dataset)
+                self.valid_loss_arr.append(valid_loss)
             if valid_loss < best_loss:
                 best_loss = valid_loss
                 counter = 0
             else:
                 counter += 1
             if counter >= self.patience:
+                self.stop_step = epoch
+                self.best_loss = best_loss
                 # print("Validation loss has not improved for {} epochs. Early stopping.".format(patience))
                 break
     
