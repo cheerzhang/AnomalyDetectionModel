@@ -237,16 +237,36 @@ class TrainAnomalyNN:
     Class for training and using an anomaly detection neural network.
 
     Attributes:
-    - lr (float): The learning rate for optimization (default: 0.001).
-    - num_epochs (int): The maximum number of training epochs (default: 1000).
-    - patience (int): The number of epochs to wait before early stopping if validation loss does not improve (default: 10).
-    - model (AnomalyDetectionNN): The trained anomaly detection neural network model.
-    - optimizer (torch.optim.Optimizer): The optimizer used for training.
-    - criterion (torch.nn.Module): The loss function used for training.
-    - train_loss_arr (numpy.ndarray): The traning loss
-    - valid_loss_arr (numpy.ndarray): The valid loss
-    - train_min_values (numpy.ndarray): The minimum values of each feature in the training dataset.
-    - train_max_values (numpy.ndarray): The maximum values of each feature in the training dataset.
+    
+    :param lr: The learning rate for optimization (default: 0.001).
+    :type lr: float
+
+    :param num_epochs: The maximum number of training epochs (default: 1000).
+    :type num_epochs: int
+
+    :param patience: The number of epochs to wait before early stopping if validation loss does not improve (default: 10).
+    :type patience: int
+
+    :param model: The trained anomaly detection neural network model.
+    :type model: AnomalyDetectionNN
+
+    :param optimizer: The optimizer used for training.
+    :type optimizer: torch.optim.Optimizer
+
+    :param criterion: The loss function used for training.
+    :type criterion: torch.nn.Module
+
+    :param train_loss_arr: The training loss array.
+    :type train_loss_arr: numpy.ndarray
+
+    :param valid_loss_arr: The validation loss array.
+    :type valid_loss_arr: numpy.ndarray
+
+    :param train_min_values: The minimum values of each feature in the training dataset.
+    :type train_min_values: numpy.ndarray
+
+    :param train_max_values: The maximum values of each feature in the training dataset.
+    :type train_max_values: numpy.ndarray
 
     Example:
     
