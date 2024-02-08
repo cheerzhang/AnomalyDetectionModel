@@ -189,14 +189,18 @@ class AnomalyDetectionNN(nn.Module):
 
 
     """
-    def __init__(self, input_dim):
+    def __init__(self, input_dim, min_vals = None, max_vals = None):
         """
         Initialize the AnomalyDetectionNN model.
 
         Args:
             input_dim (int): The number of features in the input data.
+            min_vals (list): Min values of each feature in train data.
+            max_vals (list): Max values of each feature in train data.
         """
         super(AnomalyDetectionNN, self).__init__()
+        self.min_vals = min_vals
+        self.max_vals = max_vals
         self.fc1 = nn.Linear(input_dim, 64)
         self.fc2 = nn.Linear(64, 32)
         self.fc3 = nn.Linear(32, input_dim)  # same as input, for loss calculation
@@ -218,6 +222,159 @@ class AnomalyDetectionNN(nn.Module):
         x = self.fc3(x)
         x = torch.sigmoid(x)  # Apply sigmoid activation to squash output between 0 and 1
         return x
+    
+
+################################################
+#          Train Anomaly NN model              #
+################################################
+from torch.utils.data import DataLoader, TensorDataset
+import torch.optim as optim
+from .data_process import check_valid_tensor_data
+
+
+class TrainAnomalyNN:
+    """
+    Class for training and using an anomaly detection neural network.
+
+    Attributes:
+    - lr (float): The learning rate for optimization (default: 0.001).
+    - num_epochs (int): The maximum number of training epochs (default: 1000).
+    - patience (int): The number of epochs to wait before early stopping if validation loss does not improve (default: 10).
+    - model (AnomalyDetectionNN): The trained anomaly detection neural network model.
+    - optimizer (torch.optim.Optimizer): The optimizer used for training.
+    - criterion (torch.nn.Module): The loss function used for training.
+    - train_min_values (numpy.ndarray): The minimum values of each feature in the training dataset.
+    - train_max_values (numpy.ndarray): The maximum values of each feature in the training dataset.
+
+    Example:
+    
+    .. code-block:: python
+
+        from quick_anomaly_detector.models import TrainAnomalyNN
+
+        train_model = TrainAnomalyNN(lr=0.001, num_epochs=1000, patience=10)
+        train_model.train(X_train, X_valid)
+        predict_result = train_model.predict(X_valid, threshold = 0.0002)
+
+    """
+    def __init__(self, lr=0.001, num_epochs=1000, patience=10):
+        """
+        Initializes the TrainAnomalyNN class.
+
+        Args:
+        - lr (float): The learning rate for optimization (default: 0.001).
+        - num_epochs (int): The maximum number of training epochs (default: 1000).
+        - patience (int): The number of epochs to wait before early stopping if validation loss does not improve (default: 10).
+        """
+        self.input_dim = None
+        self.lr = lr
+        self.num_epochs = num_epochs
+        self.patience = patience
+        self.model = None
+        self.optimizer = None
+        self.criterion = None
+        self.train_min_values = None
+        self.train_max_values = None
+    
+    def _normalize_data(self, X, isValid=False):
+        """
+        Normalizes the input data.
+
+        Args:
+        - X (numpy.ndarray): The input data to be normalized.
+        - isValid (bool): Whether the input data is from the validation dataset (default: False).
+
+        Returns:
+        - normalized_data (numpy.ndarray): The normalized input data.
+        """
+        if isValid:
+            min_vals = self.train_min_values
+            max_vals = self.train_max_values
+        else:
+            min_vals = np.min(X, axis=0)
+            max_vals = np.max(X, axis=0)
+            self.train_min_values = min_vals
+            self.train_max_values = max_vals
+        normalized_data = (X - min_vals) / (max_vals - min_vals)
+        return normalized_data
+    
+    def train(self, X_train, X_valid):
+        """
+        Trains the anomaly detection neural network.
+
+        Args:
+        - X_train (numpy.ndarray): The training data.
+        - X_valid (numpy.ndarray): The validation data.
+        """
+        # Normalize training and validation data
+        normalized_training_data = self._normalize_data(X_train)
+        normalized_validation_data = self._normalize_data(X_valid, True)
+        # Convert data to PyTorch tensors
+        train_dataset = TensorDataset(torch.tensor(normalized_training_data, dtype=torch.float32))
+        train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+        valid_dataset = TensorDataset(torch.tensor(normalized_validation_data, dtype=torch.float32))
+        valid_loader = DataLoader(valid_dataset, batch_size=64, shuffle=False)
+        # Initialize model, optimizer, and loss function
+        input_dim = normalized_training_data.shape[1]
+        self.input_dim = input_dim
+        self.model = AnomalyDetectionNN(self.input_dim, self.train_min_values, self.train_max_values)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+        self.criterion = nn.MSELoss()
+        best_loss = float('inf')
+        counter = 0
+        for epoch in range(self.num_epochs):
+            self.model.train()
+            running_loss = 0.0
+            for batch_inputs in train_loader:
+                self.optimizer.zero_grad()
+                for inputs in batch_inputs:  # Iterate over each tensor in the batch
+                    outputs = self.model(inputs)
+                    loss = self.criterion(outputs, inputs)  # Reconstruction loss (MSE)
+                    loss.backward()
+                    self.optimizer.step()
+                    running_loss += loss.item() * inputs.size(0)
+            # epoch_loss = running_loss / len(train_loader.dataset)
+            # print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {epoch_loss:.4f}") # traning loss
+            # Evaluate validation loss
+            with torch.no_grad():
+                valid_loss = 0.0
+                for valid_inputs in valid_loader:
+                    for inputs in valid_inputs:
+                        outputs = self.model(inputs)
+                        loss = self.criterion(outputs, inputs)
+                        valid_loss += loss.item() * inputs.size(0)
+                valid_loss /= len(valid_loader.dataset)
+            if valid_loss < best_loss:
+                best_loss = valid_loss
+                counter = 0
+            else:
+                counter += 1
+            if counter >= self.patience:
+                print("Validation loss has not improved for {} epochs. Early stopping.".format(patience))
+                break
+    
+    def predict(self, X, threshold = 0.0002):
+        """
+        Predicts anomalies in the input data.
+
+        Args:
+        - X (numpy.ndarray): The input data.
+        - threshold (float): The threshold for anomaly detection (default: 0.0002).
+
+        Returns:
+        - predictions (torch.Tensor): Tensor containing the predictions (1 for anomaly, 0 for normal) for each input sample.
+        """
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
+        with torch.no_grad():
+            normalized_data = self._normalize_data(X, True)
+            X_tensor = torch.tensor(normalized_data, dtype=torch.float32)
+            self.model.eval()
+            reconstructed_data = self.model(X_tensor)
+            reconstruction_loss = torch.mean(torch.square(X_tensor - reconstructed_data), dim=1)
+            predictions = (reconstruction_loss > threshold).int()
+        return predictions
+
 
 
 #########################################
