@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.cm import ScalarMappable
 import pandas as pd
 import numpy as np
 
@@ -65,10 +66,53 @@ def graph_multiple_histograms(df, columns, layout=(2, 2), bin_numbers=None):
 
 
 
+##################################################
+#                Scatter graph                   #
+##################################################
+def graph_scatter(df, x_column, y_column, color_column):
+    """
+    Create a scatter plot with color mapping based on a column of a DataFrame.
 
-#########################################
-#             Histogram graph           #
-#########################################
+    :param df: The pandas DataFrame containing the data.
+    :type df: pandas.DataFrame
+
+    :return: The generated scatter plot figure.
+    :rtype: matplotlib.figure.Figure
+
+    :raises ValueError: If one or more specified columns do not exist in the DataFrame.
+
+    Example: 
+
+    .. code-block:: python
+
+        from quick_anomaly_detector.data_process import graph_scatter
+
+        df = pd.DataFrame({'x_column': [1, 2, 3], 'y_column': [4, 5, 6], 'color_column': ['red', 'blue', 'green']})
+        fig = graph_scatter(df)
+        plt.show()
+    
+    .. note:: 
+    
+        Ensure that the DataFrame contains the required columns for plotting.
+    """
+    # Validate input parameters
+    if not all(col in df.columns for col in [x_column, y_column, color_column]):
+        raise ValueError("One or more specified columns do not exist in the DataFrame.")
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    scatter = ax.scatter(df[x_column], df[y_column], c=df[color_column], cmap='viridis', alpha=0.7)
+    ax.set_xlabel(x_column)
+    ax.set_ylabel(y_column)
+    ax.set_title(f"Scatter Chart (Color by {color_column})")
+    cbar = plt.colorbar(ScalarMappable(norm=None, cmap='viridis'), ax=ax, label=color_column)
+    return fig
+
+
+
+
+##################################################
+#         Log Sqaure feature transform           #
+##################################################
 def apply_transformations(df, column_name):
     """
     Apply logarithm and square transformations to a column in a DataFrame.
