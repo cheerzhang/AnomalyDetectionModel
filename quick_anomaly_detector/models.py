@@ -24,7 +24,7 @@ class AnomalyDetectionModel:
         - **f1** (*float*): F1 score corresponding to the chosen threshold.
 
     Example:
-    
+
     .. code-block:: python
 
         from quick_anomaly_detector.models import AnomalyDetectionModel
@@ -125,6 +125,68 @@ class AnomalyDetectionModel:
         outliers = p_values < self.epsilon
         return outliers
 
+
+
+
+#########################################
+#      NN Based Anomaly Detection       #
+#########################################
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+class AnomalyDetectionNN(nn.Module):
+    """
+    AnomalyDetectionNN is a neural network model designed for anomaly detection tasks.
+
+    It consists of three fully connected layers:
+    - Input layer: Takes input data with a shape of (batch_size, input_dim).
+    - Hidden layer 1: Consists of 64 neurons and applies ReLU activation function.
+    - Hidden layer 2: Consists of 32 neurons and applies ReLU activation function.
+    - Output layer: Consists of input_dim neurons, representing the reconstructed data.
+      It applies the sigmoid activation function to squash the output values between 0 and 1.
+
+    Parameters:
+        input_dim (int): The number of features in the input data.
+
+    Attributes:
+        fc1 (nn.Linear): The first fully connected layer.
+        fc2 (nn.Linear): The second fully connected layer.
+        fc3 (nn.Linear): The output layer.
+
+    Methods:
+        forward(x): Forward pass through the neural network.
+
+    """
+    def __init__(self, input_dim):
+        """
+        Initialize the AnomalyDetectionNN model.
+
+        Args:
+            input_dim (int): The number of features in the input data.
+        """
+        super(AnomalyDetectionNN, self).__init__()
+        self.fc1 = nn.Linear(input_dim, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, input_dim)  # same as input, for loss calculation
+
+    def forward(self, x):
+        """
+        Perform the forward pass through the neural network.
+
+        Args:
+            x (torch.Tensor): The input data tensor with shape (batch_size, input_dim).
+
+        Returns:
+            torch.Tensor: The reconstructed output tensor with the same shape as the input.
+        """
+        x = self.fc1(x)   # input shape is (1, N, M), N is samples number, M is feaures number
+        x = torch.relu(x)
+        x = self.fc2(x)
+        x = torch.relu(x)
+        x = self.fc3(x)
+        x = torch.sigmoid(x)  # Apply sigmoid activation to squash output between 0 and 1
+        return x
 
 
 #########################################
