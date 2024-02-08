@@ -9,15 +9,17 @@ def graph_histogram(df, x_column, bin_number=10):
     """
     Plot a histogram of a specified column from a DataFrame.
 
-    Parameters:
-    - df (DataFrame): The pandas DataFrame containing the data.
-    - x_column (str): The name of the column to be plotted.
-    - bin_number (int, optional): The number of bins to use for the histogram. Default is 10.
+        :param df: The pandas DataFrame containing the data.
+        :type df: pandas.DataFrame
+        :param x_column: The name of the column to be plotted.
+        :type x_column: str
+        :param bin_number: The number of bins to use for the histogram. Default is 10.
+        :type bin_number: int, optional
+        :return: The matplotlib Figure object containing the histogram plot.
+        :rtype: matplotlib.figure.Figure
+    
+    :Example:
 
-    Returns:
-    - fig (matplotlib.figure.Figure): The matplotlib Figure object containing the histogram plot.
-
-    Example:
     >>> import pandas as pd
     >>> import matplotlib.pyplot as plt
     >>> df = pd.DataFrame({'age': [25, 30, 35, 40, 45, 50]})
