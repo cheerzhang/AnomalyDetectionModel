@@ -350,7 +350,7 @@ class TrainAnomalyNN:
             else:
                 counter += 1
             if counter >= self.patience:
-                print("Validation loss has not improved for {} epochs. Early stopping.".format(patience))
+                # print("Validation loss has not improved for {} epochs. Early stopping.".format(patience))
                 break
     
     def predict(self, X, threshold = 0.0002):
