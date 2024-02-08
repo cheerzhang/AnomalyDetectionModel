@@ -72,18 +72,14 @@ def apply_transformations(df, column_name):
     """
     Apply logarithm and square transformations to a column in a DataFrame.
 
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        The DataFrame containing the column to transform.
-    column_name : str
-        The name of the column to transform.
+    :param df: The pandas DataFrame containing the data.
+    :type df: pandas.DataFrame
+        
+    :param column_name: The name of the column to transform.
+    :type column_name: str
 
-    Returns
-    -------
-    list
-        A list of column names including the original column and the transformed columns.
-    
+    :return: A list of column names including the original column and the transformed columns.
+    :rtype: list
         
     Example
 
