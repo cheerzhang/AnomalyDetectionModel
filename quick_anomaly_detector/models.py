@@ -24,6 +24,7 @@ class AnomalyDetectionModel:
         - **f1** (*float*): F1 score corresponding to the chosen threshold.
 
     Example:
+    
     .. code-block:: python
 
         from quick_anomaly_detector.models import AnomalyDetectionModel

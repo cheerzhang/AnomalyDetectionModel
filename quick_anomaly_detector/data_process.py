@@ -18,13 +18,16 @@ def graph_histogram(df, x_column, bin_number=10):
         :return: The matplotlib Figure object containing the histogram plot.
         :rtype: matplotlib.figure.Figure
     
-    :Example:
 
-    >>> import pandas as pd
-    >>> import matplotlib.pyplot as plt
-    >>> df = pd.DataFrame({'age': [25, 30, 35, 40, 45, 50]})
-    >>> fig = graph_histogram(df, 'age', bin_number=5)
-    >>> plt.show()
+    Example:
+    
+     .. code-block:: python
+
+        >>> import pandas as pd
+        >>> import matplotlib.pyplot as plt
+        >>> df = pd.DataFrame({'age': [25, 30, 35, 40, 45, 50]})
+        >>> fig = graph_histogram(df, 'age', bin_number=5)
+        >>> plt.show()
     """
     fig, ax = plt.subplots()
     ax.hist(df[x_column], bins=bin_number)
