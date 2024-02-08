@@ -133,8 +133,6 @@ class AnomalyDetectionModel:
 #########################################
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
 class AnomalyDetectionNN(nn.Module):
     """
     AnomalyDetectionNN is a neural network model designed for anomaly detection tasks.
@@ -156,6 +154,39 @@ class AnomalyDetectionNN(nn.Module):
 
     Methods:
         forward(x): Forward pass through the neural network.
+    
+    Example:
+
+    .. code-block:: python
+
+        from quick_anomaly_detector.models import AnomalyDetectionNN
+
+        # Load your datasets (X_train, X_val)
+        # ...
+        
+        # normalization
+        min_vals = np.min(X_train, axis=0)
+        max_vals = np.max(X_train, axis=0)
+        normalized_training_data = (X_train - min_vals) / (max_vals - min_vals)
+        normalized_validation_data = (X_valid - min_vals) / (max_vals - min_vals)
+        input_dim = normalized_training_data.shape[1]
+
+        # Create an instance of AnomalyDetectionModel
+        model = AnomalyDetectionNN(input_dim)
+
+        # Train the model
+        X_train_tensor = torch.tensor(normalized_training_data, dtype=torch.float32)
+        train_dataset = TensorDataset(X_train_tensor)
+        train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+        X_valid_tensor = torch.tensor(normalized_validation_data, dtype=torch.float32)
+        valid_dataset = TensorDataset(X_valid_tensor)
+        valid_loader = DataLoader(valid_dataset, batch_size=64, shuffle=False)
+
+        optimizer = optim.Adam(model.parameters(), lr=0.001)
+        criterion = nn.MSELoss()
+        # train ...
+
 
     """
     def __init__(self, input_dim):
