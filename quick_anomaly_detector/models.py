@@ -408,6 +408,61 @@ class TrainAnomalyNN:
 
 
 #########################################
+#              Eval Metics              #
+#########################################
+from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, f1_score, roc_curve
+import numpy as np
+
+def calculate_metrics(actual_labels, predicted_labels):
+    """
+    Calculate various evaluation metrics for binary classification.
+
+    :param actual_labels: Ground truth labels.
+    :type actual_labels: array-like
+
+    :param predicted_labels: Predicted labels.
+    :type predicted_labels: array-like
+
+    :return: Dictionary containing the following evaluation metrics:
+        - precision (float): Precision score.
+        - recall (float): Recall score.
+        - label_pass_rate (float): Proportion of samples labeled as negative class in the ground truth.
+        - predict_pass_rate (float): Proportion of samples predicted as negative class.
+        - ks (float): Kolmogorov-Smirnov statistic.
+        - gini (float): Gini coefficient.
+        - f1 (float): F1 score.
+        - auc_roc (float): Area under the ROC curve.
+        - accuracy (float): Accuracy score.
+    :rtype: dict
+    """
+    # Precision
+    precision = precision_score(actual_labels, predicted_labels)
+    # Recall
+    recall = recall_score(actual_labels, predicted_labels)
+    # Pass Rate
+    label_pass_rate = np.mean(actual_labels == 0)
+    predict_pass_rate = np.mean(predicted_labels == 0)
+    # KS statistic
+    fpr, tpr, _ = roc_curve(actual_labels, predicted_labels)
+    ks_statistic = max(tpr - fpr)
+    # Gini coefficient
+    gini = 2 * auc - 1
+    # F1 Score
+    f1 = f1_score(actual_labels, predicted_labels)
+    # AUC-ROC
+    auc_roc = roc_auc_score(actual_labels, predicted_labels)
+    # Accuracy
+    accuracy = accuracy_score(actual_labels, predicted_labels)
+    metrics = {
+      'precision': precision, 'recall': recall, 
+      'label_pass_rate': label_pass_rate, 'predict_pass_rate': predict_pass_rate,
+      'ks': ks_statistic, 'gini': gini, 'f1': f1, 'auc_roc': auc_roc, 'accuracy': accuracy
+    }
+    return metrics
+
+
+
+#########################################
 #          K-Means Cluster              #
 #########################################
 class KMeansModel:

@@ -25,6 +25,7 @@ Check out the :doc:`quick_start` section for further information.
    quick_anomaly_detector.models.AnomalyDetectionNN
    quick_anomaly_detector.models.TrainAnomalyNN
    quick_anomaly_detector.models.KMeansModel
+   quick_anomaly_detector.models.calculate_metrics
 
 Additional Information
 ----------------------
