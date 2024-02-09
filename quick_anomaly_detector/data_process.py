@@ -196,30 +196,26 @@ def check_valid_tensor_data(input_tensor):
 #########################################################
 #         Customeized Imputer Class                     #
 #########################################################
-from sklearn.base import TransformerMixin
-from sklearn.impute import SimpleImputer
+from sklearn.base import BaseEstimator, TransformerMixin
 
-class CustomImputer(TransformerMixin):
+class ImputerNa(BaseEstimator, TransformerMixin):
     """
     A custom imputer transformer that extends scikit-learn's SimpleImputer
     while preserving column names after imputation.
 
     Parameters
-    ----------
     strategy : {'mean', 'median', 'most_frequent', 'constant'}, default='mean'   
         The imputation strategy.   
     fill_value : str, int, or float, optional    
         The constant value to fill missing values when strategy='constant'.
 
     Attributes
-    ----------
     strategy : str   
         The imputation strategy.
     fill_value : str, int, or float   
         The constant value to fill missing values when strategy='constant'.
 
     Methods
-    -------
     fit(X, y=None)   
         Fit the imputer to the data.
     transform(X, y=None)   
@@ -246,7 +242,6 @@ class CustomImputer(TransformerMixin):
     def __init__(self, strategy='mean', fill_value=None):
         self.strategy = strategy
         self.fill_value = fill_value
-        self.imputer = SimpleImputer(strategy=strategy, fill_value=fill_value)
 
     def fit(self, X, y=None):
         """
@@ -284,7 +279,6 @@ class CustomImputer(TransformerMixin):
         X_imputed : pandas.DataFrame of shape (n_samples, n_features)
             The transformed data with imputed missing values and preserved column names.
         """
-        X_filled = X.fillna(self.fill_value)
-        # Restore column names
-        X_filled = pd.DataFrame(X_filled, columns=X.columns)
+        X_filled = X.copy()
+        X_filled = X_filled.fillna(self.fill_values)
         return X_filled
