@@ -663,5 +663,21 @@ class SelectFeatures(BaseEstimator):
         X_ = X.copy()
         return X_[self.features+self.label]
 
-        
+
+#####################################
+#      Lower the string             #
+#####################################
+class LowerStr(BaseEstimator):
+    """
+    This class is for pipeline using of make the string value to lower letter.
+    """
+    def __init__(self, features=[]):
+        self.features = features
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        for col in self.features:
+            X_[col] = X_[col].str.lower()
+        return X_  
     
