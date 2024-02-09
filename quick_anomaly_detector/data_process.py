@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
+from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, f1_score, roc_curve
 import pandas as pd
 import numpy as np
 import torch
@@ -196,8 +197,6 @@ def check_valid_tensor_data(input_tensor):
 #########################################
 #              Eval Metics              #
 #########################################
-from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, f1_score, roc_curve
-
 def calculate_metrics(actual_labels, predicted_labels):
     """
     Calculate various evaluation metrics for binary classification.

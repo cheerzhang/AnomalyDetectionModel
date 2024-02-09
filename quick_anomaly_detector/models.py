@@ -647,5 +647,21 @@ class ImputerNa(BaseEstimator, TransformerMixin):
         return X_filled
 
 
+#####################################
+#      Select Features + Label      #
+#####################################
+class SelectFeatures(BaseEstimator):
+    """
+    This class is for pipeline using of select features and label
+    """
+    def __init__(self, features=[], label='label'):
+        self.features = features
+        self.label = [label]
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        return X_[self.features+self.label]
+
         
     
