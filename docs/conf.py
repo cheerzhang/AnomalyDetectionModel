@@ -2,7 +2,7 @@ import sys, os
 
 
 # Configuration file for the Sphinx documentation builder.
-sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information
@@ -12,7 +12,7 @@ copyright = '2024, LeZhang'
 author = 'LeZhang'
 
 release = '0.2'
-version = '0.2.5'
+version = '0.2.6'
 
 # -- General configuration
 
