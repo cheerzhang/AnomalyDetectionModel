@@ -706,7 +706,7 @@ class LengthStr(BaseEstimator):
 #####################################
 class LogTransform(BaseEstimator):
     """
-    This class is for pipeline using of make the string value to lower letter.
+    This class is for pipeline using of calculate log.
     """
     def __init__(self, features=[]):
         self.features = features
@@ -716,4 +716,22 @@ class LogTransform(BaseEstimator):
         X_ = X.copy()
         for col in self.features:
             X_[f"log_{col}"] = X_[col].apply(lambda x: np.log(x+0.001))
+        return X_ 
+
+
+#####################################
+#      Set Numeric DataType         #
+#####################################
+class NumericDataType(BaseEstimator):
+    """
+    This class is for set data into numberic datatype.
+    """
+    def __init__(self, features=[]):
+        self.features = features
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        for col in self.features:
+            X_[col] = X_[col].apply(pd.to_numeric, errors='coerce')
         return X_ 

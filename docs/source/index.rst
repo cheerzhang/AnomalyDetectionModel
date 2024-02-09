@@ -12,10 +12,9 @@ Check out the :doc:`quick_start` section for further information.
 
 .. autosummary::
    :toctree: generated
-   :nosignatures:
-
 
    quick_anomaly_detector.data_process.apply_transformations
+      :alias: apply_transformations
    quick_anomaly_detector.data_process.calculate_metrics
    quick_anomaly_detector.data_process.check_valid_tensor_data
 
@@ -32,6 +31,7 @@ Check out the :doc:`quick_start` section for further information.
    quick_anomaly_detector.models.LowerStr
    quick_anomaly_detector.models.LengthStr
    quick_anomaly_detector.models.LogTransform
+   quick_anomaly_detector.models.NumericDataType
 
 
 Additional Information
