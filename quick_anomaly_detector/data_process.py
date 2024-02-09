@@ -147,7 +147,7 @@ def apply_transformations(df, column_name):
 
 
 ##################################################
-#         check valid tensor                      #
+#         check valid tensor                     #
 ##################################################
 def check_valid_tensor_data(input_tensor):
     """
@@ -189,3 +189,102 @@ def check_valid_tensor_data(input_tensor):
         return False, "Input tensor has an empty shape"
     
     return True, "Input passes all checks"
+
+
+
+#########################################################
+#         Customeized Imputer Class                     #
+#########################################################
+from sklearn.base import TransformerMixin
+from sklearn.impute import SimpleImputer
+
+class CustomImputer(TransformerMixin):
+    """
+    A custom imputer transformer that extends scikit-learn's SimpleImputer
+    while preserving column names after imputation.
+
+    Parameters
+    ----------
+    strategy : {'mean', 'median', 'most_frequent', 'constant'}, default='mean'   
+        The imputation strategy.   
+    fill_value : str, int, or float, optional    
+        The constant value to fill missing values when strategy='constant'.
+
+    Attributes
+    ----------
+    strategy : str   
+        The imputation strategy.
+    fill_value : str, int, or float   
+        The constant value to fill missing values when strategy='constant'.
+
+    Methods
+    -------
+    fit(X, y=None)   
+        Fit the imputer to the data.
+    transform(X, y=None)   
+        Transform the data by imputing missing values and preserving column names.
+
+    Examples
+
+        .. code-block:: python
+    
+        from sklearn.pipeline import Pipeline
+        quick_anomaly_detector.data_process import CustomImputer
+
+        fill_values = {
+            'column1': 0,
+            'column2': ''
+        }
+        pipeline = Pipeline([
+            ('imputer', CustomImputer(strategy='mean')),
+            ('fillna', CustomImputer(strategy='constant', fill_value=fill_values)),
+        ])
+        X_train_imputed = pipeline.fit_transform(X_train)
+
+    """
+    def __init__(self, strategy='mean', fill_value=None):
+        self.strategy = strategy
+        self.fill_value = fill_value
+        self.imputer = SimpleImputer(strategy=strategy, fill_value=fill_value)
+
+    def fit(self, X, y=None):
+        """
+        Fit the imputer to the data.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input data.
+
+        y : array-like of shape (n_samples,), default=None
+            Ignored.
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        self.imputer.fit(X)
+        return self
+
+    def transform(self, X, y=None):
+        """
+        Transform the data by imputing missing values and preserving column names.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input data.
+
+        y : array-like of shape (n_samples,), default=None
+            Ignored.
+
+        Returns
+        -------
+        X_imputed : pandas.DataFrame of shape (n_samples, n_features)
+            The transformed data with imputed missing values and preserved column names.
+        """
+        X_imputed = self.imputer.transform(X)
+        # Restore column names
+        X_imputed = pd.DataFrame(X_imputed, columns=X.columns)
+        return X_imputed
