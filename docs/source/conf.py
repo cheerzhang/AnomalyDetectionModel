@@ -2,7 +2,7 @@ import sys, os
 
 
 # Configuration file for the Sphinx documentation builder.
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information
@@ -12,7 +12,7 @@ copyright = '2024, LeZhang'
 author = 'LeZhang'
 
 release = '0.2'
-version = '0.2.1'
+version = '0.2.2'
 
 # -- General configuration
 
@@ -45,4 +45,6 @@ epub_show_urls = 'footnote'
 
 # -- Options for autodoc extension ----------------------------------------
 autodoc_member_order = 'bysource'
+
+master_doc = 'index'
 
