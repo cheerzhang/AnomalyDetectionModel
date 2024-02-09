@@ -265,7 +265,6 @@ class CustomImputer(TransformerMixin):
         self : object
             Returns self.
         """
-        self.imputer.fit(X)
         return self
 
     def transform(self, X, y=None):
@@ -285,7 +284,7 @@ class CustomImputer(TransformerMixin):
         X_imputed : pandas.DataFrame of shape (n_samples, n_features)
             The transformed data with imputed missing values and preserved column names.
         """
-        X_imputed = self.imputer.transform(X)
+        X_filled = X.fillna(self.fill_value)
         # Restore column names
-        X_imputed = pd.DataFrame(X_imputed, columns=X.columns)
-        return X_imputed
+        X_filled = pd.DataFrame(X_filled, columns=X.columns)
+        return X_filled
