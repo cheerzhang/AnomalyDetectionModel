@@ -604,7 +604,7 @@ class ImputerNa(BaseEstimator, TransformerMixin):
     """
     def __init__(self, strategy='mean', fill_values=None):
         self.strategy = strategy
-        self.fill_value = fill_values
+        self.fill_values = fill_values
 
     def fit(self, X, y=None):
         """
