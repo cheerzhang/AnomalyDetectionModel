@@ -6,7 +6,7 @@ Welcome to quick-anomaly-detector's documentation!
 Check out the :doc:`quick_start` section for further information.
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 10
 
    quick_start
 
@@ -31,6 +31,7 @@ Check out the :doc:`quick_start` section for further information.
    quick_anomaly_detector.models.SelectFeatures
    quick_anomaly_detector.models.LowerStr
    quick_anomaly_detector.models.LengthStr
+   quick_anomaly_detector.models.LogTransform
 
 
 Additional Information

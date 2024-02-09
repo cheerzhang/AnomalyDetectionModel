@@ -697,4 +697,23 @@ class LengthStr(BaseEstimator):
         X_ = X.copy()
         for col in self.features:
             X_[f"{col}_len"] = X_[col].str.len()
+        return X_
+
+
+
+#####################################
+#      Log value of columns         #
+#####################################
+class LogTransform(BaseEstimator):
+    """
+    This class is for pipeline using of make the string value to lower letter.
+    """
+    def __init__(self, features=[]):
+        self.features = features
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        for col in self.features:
+            X_[f"log_{col}"] = X_[col].apply(lambda x: np.log(x+0.001))
         return X_ 
