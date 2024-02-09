@@ -716,6 +716,7 @@ class LogTransform(BaseEstimator):
         X_ = X.copy()
         for col in self.features:
             X_[f"log_{col}"] = X_[col].apply(lambda x: np.log(x+0.001))
+            X_[f"square05_{col}"] = X_[col].apply(lambda x: x ** 0.5)
         return X_ 
 
 
