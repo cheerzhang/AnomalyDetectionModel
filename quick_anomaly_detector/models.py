@@ -393,6 +393,7 @@ class TrainAnomalyNN:
 
         Returns:
         - predictions (torch.Tensor): Tensor containing the predictions (1 for anomaly, 0 for normal) for each input sample.
+        - reconstruction_loss: Tensor containing the loss of reconstructed_data
         """
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
@@ -403,7 +404,7 @@ class TrainAnomalyNN:
             reconstructed_data = self.model(X_tensor)
             reconstruction_loss = torch.mean(torch.square(X_tensor - reconstructed_data), dim=1)
             predictions = (reconstruction_loss > threshold).int()
-        return predictions
+        return predictions, reconstruction_loss
 
 
 
