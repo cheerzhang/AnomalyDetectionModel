@@ -239,9 +239,9 @@ class ImputerNa(BaseEstimator, TransformerMixin):
         X_train_imputed = pipeline.fit_transform(X_train)
 
     """
-    def __init__(self, strategy='mean', fill_value=None):
+    def __init__(self, strategy='mean', fill_values=None):
         self.strategy = strategy
-        self.fill_value = fill_value
+        self.fill_value = fill_values
 
     def fit(self, X, y=None):
         """
