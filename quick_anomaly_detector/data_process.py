@@ -22,6 +22,9 @@ def graph_multiple_histograms(df, columns, layout=(2, 2), bin_numbers=None):
         
     :param bin_numbers: List of integers specifying the number of bins for each column.
     :type bin_numbers: list, optional
+
+    :return: The generated matplotlib Figure object containing the histograms.
+    :rtype: matplotlib.figure.Figure
     
     Example:
     
@@ -156,11 +159,9 @@ def check_valid_tensor_data(input_tensor):
     :param input_tensor: Input tensor to be checked.
     :type input_tensor: torch.Tensor
     
-    :return: True if input passes all checks, False otherwise.
-    :rtype: bool
-    
-    :return: Message indicating the result of the checks.
-    :rtype: str
+    :return: A tuple containing a boolean indicating whether the input passes all checks and a message indicating the result of the checks.
+    :rtype: tuple[bool, str]
+
     
     Example: 
 
