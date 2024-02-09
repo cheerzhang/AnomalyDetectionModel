@@ -193,92 +193,54 @@ def check_valid_tensor_data(input_tensor):
 
 
 
-#########################################################
-#         Customeized Imputer Class                     #
-#########################################################
-from sklearn.base import BaseEstimator, TransformerMixin
+#########################################
+#              Eval Metics              #
+#########################################
+from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, f1_score, roc_curve
 
-class ImputerNa(BaseEstimator, TransformerMixin):
+def calculate_metrics(actual_labels, predicted_labels):
     """
-    A custom imputer transformer that extends scikit-learn's SimpleImputer
-    while preserving column names after imputation.
+    Calculate various evaluation metrics for binary classification.
 
-    Parameters
-    strategy : {'mean', 'median', 'most_frequent', 'constant'}, default='mean'   
-        The imputation strategy.   
-    fill_value : str, int, or float, optional    
-        The constant value to fill missing values when strategy='constant'.
+    :param actual_labels: Ground truth labels.
+    :type actual_labels: array-like
 
-    Attributes
-    strategy : str   
-        The imputation strategy.
-    fill_value : str, int, or float   
-        The constant value to fill missing values when strategy='constant'.
+    :param predicted_labels: Predicted labels.
+    :type predicted_labels: array-like
 
-    Methods
-    fit(X, y=None)   
-        Fit the imputer to the data.
-    transform(X, y=None)   
-        Transform the data by imputing missing values and preserving column names.
-
-    Examples
-
-        .. code-block:: python
-    
-        from sklearn.pipeline import Pipeline
-        quick_anomaly_detector.data_process import CustomImputer
-
-        fill_values = {
-            'column1': 0,
-            'column2': ''
-        }
-        pipeline = Pipeline([
-            ('imputer', CustomImputer(strategy='mean')),
-            ('fillna', CustomImputer(strategy='constant', fill_value=fill_values)),
-        ])
-        X_train_imputed = pipeline.fit_transform(X_train)
-
+    :return: Dictionary containing the following evaluation metrics:
+        - precision (float): Precision score.
+        - recall (float): Recall score.
+        - label_pass_rate (float): Proportion of samples labeled as negative class in the ground truth.
+        - predict_pass_rate (float): Proportion of samples predicted as negative class.
+        - ks (float): Kolmogorov-Smirnov statistic.
+        - gini (float): Gini coefficient.
+        - f1 (float): F1 score.
+        - auc_roc (float): Area under the ROC curve.
+        - accuracy (float): Accuracy score.
+    :rtype: dict
     """
-    def __init__(self, strategy='mean', fill_values=None):
-        self.strategy = strategy
-        self.fill_value = fill_values
-
-    def fit(self, X, y=None):
-        """
-        Fit the imputer to the data.
-
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input data.
-
-        y : array-like of shape (n_samples,), default=None
-            Ignored.
-
-        Returns
-        -------
-        self : object
-            Returns self.
-        """
-        return self
-
-    def transform(self, X, y=None):
-        """
-        Transform the data by imputing missing values and preserving column names.
-
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input data.
-
-        y : array-like of shape (n_samples,), default=None
-            Ignored.
-
-        Returns
-        -------
-        X_imputed : pandas.DataFrame of shape (n_samples, n_features)
-            The transformed data with imputed missing values and preserved column names.
-        """
-        X_filled = X.copy()
-        X_filled = X_filled.fillna(self.fill_values)
-        return X_filled
+    # Precision
+    precision = precision_score(actual_labels, predicted_labels)
+    # Recall
+    recall = recall_score(actual_labels, predicted_labels)
+    # Pass Rate
+    label_pass_rate = np.mean(actual_labels == 0)
+    predict_pass_rate = np.mean(predicted_labels == 0)
+    # KS statistic
+    fpr, tpr, _ = roc_curve(actual_labels, predicted_labels)
+    ks_statistic = max(tpr - fpr)
+    # F1 Score
+    f1 = f1_score(actual_labels, predicted_labels)
+    # AUC-ROC
+    auc_roc = roc_auc_score(actual_labels, predicted_labels)
+    # Gini coefficient
+    gini = 2 * auc_roc - 1
+    # Accuracy
+    accuracy = accuracy_score(actual_labels, predicted_labels)
+    metrics = {
+      'precision': precision, 'recall': recall, 
+      'label_pass_rate': label_pass_rate, 'predict_pass_rate': predict_pass_rate,
+      'ks': ks_statistic, 'gini': gini, 'f1': f1, 'auc_roc': auc_roc, 'accuracy': accuracy
+    }
+    return metrics

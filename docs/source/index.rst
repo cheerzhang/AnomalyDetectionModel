@@ -16,7 +16,7 @@ Check out the :doc:`quick_start` section for further information.
 
 
    quick_anomaly_detector.data_process.apply_transformations
-   quick_anomaly_detector.data_process.ImputerNa
+   quick_anomaly_detector.data_process.calculate_metrics
    quick_anomaly_detector.data_process.check_valid_tensor_data
 
    quick_anomaly_detector.data_process.graph_scatter
@@ -27,7 +27,7 @@ Check out the :doc:`quick_start` section for further information.
    quick_anomaly_detector.models.AnomalyDetectionNN
    quick_anomaly_detector.models.TrainAnomalyNN
    quick_anomaly_detector.models.KMeansModel
-   quick_anomaly_detector.models.calculate_metrics
+   quick_anomaly_detector.models.ImputerNa
 
 Additional Information
 ----------------------
