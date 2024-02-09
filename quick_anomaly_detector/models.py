@@ -736,3 +736,34 @@ class NumericDataType(BaseEstimator):
             X_[col] = X_[col].apply(pd.to_numeric, errors='coerce')
         return X_
 
+
+#####################################
+#      Calculate Similarity         #
+#####################################
+class Similarity(BaseEstimator):
+    """
+    This class is for calculate similarity of 2 string.
+    """
+    def __init__(self, pairs=[]):
+        self.pairs = pairs
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        for pair in self.pairs:
+            X_[f'{pair[0]}_{pair[1]}_score'] = self.get_similarity(X_, pair[0], pair[1])
+        return X_
+    def get_similarity(self, df, column_str_1, column_str_2):
+        if df.empty:
+            raise ValueError("DataFrame is empty.")
+        if column_str_1 not in df.columns or column_str_2 not in df.columns:
+            raise ValueError("One or more specified columns not found in the DataFrame.")
+        def jaccard_similarity(str1, str2):
+            if not str1 or not str2:
+                return 0.0
+            a = set(str1)
+            b = set(str2)
+            c = a.intersection(b)
+            return float(len(c)) / (len(a) + len(b) - len(c))
+        df.loc[:, 'similarity_score'] = df.apply(lambda row: jaccard_similarity(row[column_str_1], row[column_str_2]), axis=1)
+        return df['similarity_score'].values
