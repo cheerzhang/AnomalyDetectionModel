@@ -734,4 +734,5 @@ class NumericDataType(BaseEstimator):
         X_ = X.copy()
         for col in self.features:
             X_[col] = X_[col].apply(pd.to_numeric, errors='coerce')
-        return X_ 
+        return X_
+
