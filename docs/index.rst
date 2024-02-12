@@ -19,13 +19,13 @@ Check out the :doc:`quick_start` section for further information.
    data_process.apply_transformations
       :alias: apply_transformations
    quick_anomaly_detector.data_process.calculate_metrics
+      :alias: calculate_metrics
    quick_anomaly_detector.data_process.check_valid_tensor_data
 
    quick_anomaly_detector.data_process.graph_scatter
    quick_anomaly_detector.data_process.graph_multiple_histograms
    quick_anomaly_detector.data_process.category_hist_graph
 
-   models.*
    quick_anomaly_detector.models.AnomalyDetectionModel
    quick_anomaly_detector.models.AnomalyDetectionNN
    quick_anomaly_detector.models.TrainAnomalyNN
