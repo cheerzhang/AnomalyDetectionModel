@@ -585,9 +585,9 @@ class TrainClassificationNN:
             # valid_dataset = ClassificationDataset(torch.tensor(normalized_data, dtype=torch.float32), torch.tensor(y_val, dtype=torch.float32))
             X_tensor = torch.tensor(normalized_data, dtype=torch.float32)
             self.model.eval()
-            predict = self.model(X_tensor)
-            predictions = (predict > threshold).int()
-        return predictions, predict
+            predict_score = self.model(X_tensor)
+            predictions = (predict_score > threshold).int()
+        return predictions, predict_score
             
 
 
