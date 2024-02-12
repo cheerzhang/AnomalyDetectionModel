@@ -1,4 +1,4 @@
-Models
+Data Process
 ==================================================
 
 **quick-anomaly-detector.data_process** includs the funtion to process data and show graph.

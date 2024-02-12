@@ -577,7 +577,7 @@ class TrainClassificationNN:
                 self.stop_step = epoch
                 self.best_loss = best_loss
                 break
-    def predict(self, X, y_val=None, threshold = 0.5):
+    def predict(self, X, y_val=None):
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
         with torch.no_grad():
