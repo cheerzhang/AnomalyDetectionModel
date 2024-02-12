@@ -471,8 +471,6 @@ class TrainEmbedding:
         self.model = None
         self.optimizer = None
         self.criterion = None
-        self.stop_step = 0
-        self.best_loss = np.inf
         self.letter_to_number = {'a': 1,  'b': 2,  'c': 3,  'd': 4,  'e': 5,  'f': 6,  'g': 7,  'h': 8,  'i': 9,  'j': 10, 
             'k': 11, 'l': 12, 'm': 13, 'n': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 's': 19, 't': 20, 
             'u': 21, 'v': 22, 'w': 23, 'x': 24, 'y': 25, 'z': 26, 
@@ -485,6 +483,11 @@ class TrainEmbedding:
         self.max_length = 0
         self.batch_size = batch_size
         self.vocab_size = len(self.letter_to_number)+1
+        self.stop_step = 0
+        self.best_loss = np.inf
+        self.train_loss_arr = []
+        self.valid_loss_arr = []
+
     def get_encode(self, x):
         encoded_name = [self.letter_to_number[letter] for letter in x if letter in self.letter_to_number]
         return encoded_name
@@ -622,7 +625,7 @@ class TrainClassificationNN:
         self.optimizer = None
         self.criterion = None
         self.stop_step = 0
-        self.best_loss = 0
+        self.best_loss = np.inf
         self.train_loss_arr = []
         self.valid_loss_arr = []
         self.train_min_values = None
