@@ -464,7 +464,7 @@ class TransformerModel(nn.Module):
         return output
 
 class TrainEmbedding:
-    def __init__(self, lr=0.001, num_epochs=1000, patience=10):
+    def __init__(self, lr=0.001, num_epochs=1000, patience=10, batch_size=32):
         self.lr = lr
         self.num_epochs = num_epochs
         self.patience = patience
@@ -483,6 +483,8 @@ class TrainEmbedding:
             '.': 63, '-': 64, ' ': 65, '@': 66, '?': 67, '/': 68,  "'": 69, "|": 70, 
             '+': 71}
         self.max_length = 0
+        self.batch_size = batch_size
+        self.vocab_size = len(self.letter_to_number)+1
     def get_encode(self, x):
         encoded_name = [self.letter_to_number[letter] for letter in x if letter in self.letter_to_number]
         return encoded_name
@@ -505,7 +507,31 @@ class TrainEmbedding:
 
         train_labels = df_train[label_name].values
         val_labels = df_valid[label_name].values
-        return train_sequences, val_sequences, train_labels, val_labels
+
+        train_sequences = torch.LongTensor(train_sequences)
+        val_sequences = torch.LongTensor(val_sequences)
+        train_labels = torch.LongTensor(train_labels)
+        val_labels = torch.LongTensor(val_labels)
+        train_dataset = TensorDataset(train_sequences, train_labels)
+        train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
+        val_dataset = TensorDataset(val_sequences, val_labels)
+        val_loader = DataLoader(val_dataset, batch_size=self.batch_size, shuffle=False)
+
+        embedding_dim = 4
+        nhead = 1
+        d_hid = 64
+        nlayers  = 1
+        dropout = 0.5
+
+        model = TransformerModel(
+            ntoken=self.ocab_size, 
+            d_model=embedding_dim, 
+            nhead=nhead, 
+            d_hid=d_hid, 
+            nlayers=nlayers, 
+            dropout=dropout, 
+            sequence_length=self.max_length)
+        return model
 
 
 #########################################
