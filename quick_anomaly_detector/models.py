@@ -468,8 +468,23 @@ class TransformerModel(nn.Module):
 
 
 #########################################
-#           Embedding NN model          #
+#      Classification NN model          #
 #########################################
+from torch.utils.data import Dataset
+class ClassificationDataset(Dataset):
+    def __init__(self, inputs, labels):
+        self.inputs = inputs
+        self.labels = labels
+
+    def __len__(self):
+        return len(self.inputs)
+
+    def __getitem__(self, idx):
+        input_data = self.inputs[idx]
+        label = self.labels[idx]
+        return input_data, label
+
+
 class NNModel(nn.Module):
     def __init__(self, input_dim, min_vals = None, max_vals = None):
         """
