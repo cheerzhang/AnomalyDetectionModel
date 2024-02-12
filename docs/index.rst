@@ -9,6 +9,7 @@ Check out the :doc:`quick_start` section for further information.
    :maxdepth: 10
 
    quick_start
+   models
 
 .. currentmodule:: quick_anomaly_detector
 
