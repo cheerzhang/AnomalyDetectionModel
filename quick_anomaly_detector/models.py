@@ -472,7 +472,7 @@ class TrainEmbedding:
         self.optimizer = None
         self.criterion = None
         self.stop_step = 0
-        self.best_loss = 0
+        self.best_loss = np.inf
         self.letter_to_number = {'a': 1,  'b': 2,  'c': 3,  'd': 4,  'e': 5,  'f': 6,  'g': 7,  'h': 8,  'i': 9,  'j': 10, 
             'k': 11, 'l': 12, 'm': 13, 'n': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 's': 19, 't': 20, 
             'u': 21, 'v': 22, 'w': 23, 'x': 24, 'y': 25, 'z': 26, 
@@ -522,8 +522,8 @@ class TrainEmbedding:
         d_hid = 64
         nlayers  = 1
         dropout = 0.5
-
-        model = TransformerModel(
+    
+        self.model = TransformerModel(
             ntoken=self.ocab_size, 
             d_model=embedding_dim, 
             nhead=nhead, 
@@ -531,7 +531,48 @@ class TrainEmbedding:
             nlayers=nlayers, 
             dropout=dropout, 
             sequence_length=self.max_length)
-        return model
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
+        ratio1 =  train_labels.sum() / len(train_labels)
+        ratio0 =  (len(train_labels) - train_labels.sum()) / len(train_labels)
+        weight_for_class_0 = 1 / ratio0
+        weight_for_class_1 = 1 / ratio1
+        self.criterion = nn.CrossEntropyLoss(weight=torch.tensor([weight_for_class_0, weight_for_class_1]))
+        best_loss = float('inf')
+        
+        for epoch in range(self.num_epochs):
+            # train
+            self.model.train()
+            total_loss = 0.0
+            for sequences, labels in train_loader:
+                self.optimizer.zero_grad()
+                output = self.model(sequences)
+                loss = self.criterion(output, labels)
+                loss.backward()
+                self.optimizer.step()
+                total_loss += loss.item()
+            avg_loss = total_loss / len(train_loader)
+            self.train_loss_arr.append(avg_loss)
+            # valid
+            self.model.eval()
+            val_loss = 0.0
+            with torch.no_grad():
+                for val_sequences, val_labels in val_loader:
+                    val_output = self.model(val_sequences)
+                    val_loss += self.criterion(val_output, val_labels).item()
+            avg_val_loss = val_loss / len(val_loader)
+            self.valid_loss_arr.append(avg_val_loss)
+            # early stop
+            if avg_val_loss < best_loss:
+                best_loss = avg_val_loss
+                wait = 0
+            else:
+                wait += 1  # Increment patience counter
+            if wait >= self.patience:
+                self.stop_step = epoch
+                self.best_loss = best_loss
+                break
+
+
 
 
 #########################################
