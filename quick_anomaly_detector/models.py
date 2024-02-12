@@ -584,8 +584,8 @@ class TrainEmbedding:
         X['encoded_features'] = X[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         x_sequences = X['encoded_features'].tolist()
         x_sequences = self.padding(x_sequences, self.max_length)
-        x_sequences = torch.LongTensor(x_sequences)
         x_labels = X[self.label_name].values
+        x_sequences = torch.LongTensor(x_sequences)
         x_labels = torch.LongTensor(x_labels)
         x_dataset = TensorDataset(x_sequences, x_labels)
         x_loader = DataLoader(x_dataset, batch_size=self.batch_size, shuffle=False)
@@ -595,10 +595,9 @@ class TrainEmbedding:
         with torch.no_grad():
             for x_sequences, x_labels in x_loader:
                 x_output = self.model(x_sequences)
-                print(x_output.size())
-                # x_probs = torch.softmax(x_output, dim=1)
-                # x_preds = torch.argmax(x_probs, dim=1)
-                item_preds = [item for item in x_output.tolist()]
+                x_probs = torch.softmax(x_output, dim=1)
+                x_preds = torch.argmax(x_probs, dim=1)
+                item_preds = [item for item in x_preds.tolist()]
                 predictions = predictions + item_preds
                 labels = labels + x_labels.tolist()
         return predictions
