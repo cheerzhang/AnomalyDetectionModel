@@ -9,8 +9,9 @@ Models
    :toctree: my_doc
 
    models.AnomalyDetectionModel
-   models.AnomalyDetectionNN
    models.TrainAnomalyNN
+   models.TrainEmbedding
+   models.TrainClassificationNN
    models.KMeansModel
    models.ImputerNa
    models.SelectFeatures
