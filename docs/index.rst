@@ -13,7 +13,7 @@ Check out the :doc:`quick_start` section for further information.
 .. currentmodule:: quick_anomaly_detector
 
 .. autosummary::
-   :toctree: generated
+   :toctree: quick_anomaly_detector
 
    data_process.apply_transformations
       :alias: apply_transformations
