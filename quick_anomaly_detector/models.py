@@ -503,6 +503,83 @@ class ClassificationNNModel(nn.Module):
         return x
 
 
+class TrainClassificationNN:
+    def __init__(self, lr=0.001, num_epochs=1000, patience=10):
+        self.input_dim = None
+        self.lr = lr
+        self.num_epochs = num_epochs
+        self.patience = patience
+        self.model = None
+        self.optimizer = None
+        self.criterion = None
+        self.stop_step = 0
+        self.best_loss = 0
+        self.train_loss_arr = []
+        self.valid_loss_arr = []
+        self.train_min_values = None
+        self.train_max_values = None
+    def _normalize_data(self, X, isValid=False):
+        if isValid:
+            min_vals = self.train_min_values
+            max_vals = self.train_max_values
+        else:
+            min_vals = np.min(X, axis=0)
+            max_vals = np.max(X, axis=0)
+            self.train_min_values = min_vals
+            self.train_max_values = max_vals
+        normalized_data = (X - min_vals) / (max_vals - min_vals)
+        return normalized_data
+    def train(self, X_train, X_valid, y_train, y_val):
+        # Normalize training and validation data
+        normalized_training_data = self._normalize_data(X_train)
+        normalized_validation_data = self._normalize_data(X_valid, True)
+        # Convert data to PyTorch tensors
+        train_dataset = ClassificationDataset(torch.tensor(normalized_training_data, dtype=torch.float32), torch.tensor(y_train, dtype=torch.float32))
+        valid_dataset = ClassificationDataset(torch.tensor(normalized_validation_data, dtype=torch.float32), torch.tensor(y_val, dtype=torch.float32))
+        batch_size = 32
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
+        input_dim = normalized_training_data.shape[1]
+        model = ClassificationNNModel(input_dim=input_dim)
+
+        self.input_dim = input_dim
+        self.model = ClassificationNNModel(input_dim=input_dim)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+        self.criterion = nn.BCELoss()
+        best_loss = float('inf')
+        counter = 0
+        for epoch in range(self.num_epochs):
+            model.train()
+            running_loss = 0.0
+            for batch_inputs, batch_labels in train_loader:
+                self.optimizer.zero_grad()
+                outputs = self.model(batch_inputs)
+                loss = self.criterion(outputs, batch_labels)
+                loss.backward()
+                self.optimizer.step()
+                running_loss += loss.item() * batch_inputs.size(0)
+            epoch_loss = running_loss / len(train_loader.dataset)
+            self.train_loss_arr.append(epoch_loss)
+            with torch.no_grad():
+                valid_loss = 0.0
+                for batch_inputs, batch_labels in valid_loader:
+                    outputs = self.model(batch_inputs)
+                    loss = self.criterion(outputs, batch_labels)
+                    valid_loss += loss.item() * batch_inputs.size(0)
+                valid_loss /= len(valid_loader.dataset)
+                self.valid_loss_arr.append(valid_loss)
+            if valid_loss < best_loss:
+                best_loss = valid_loss
+                counter = 0
+            else:
+                counter += 1
+            if counter >= self.patience:
+                self.stop_step = epoch
+                self.best_loss = best_loss
+                break
+            
+
+
 
 #########################################
 #          K-Means Cluster              #

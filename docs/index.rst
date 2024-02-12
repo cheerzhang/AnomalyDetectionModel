@@ -15,12 +15,12 @@ Check out the :doc:`quick_start` section for further information.
 .. autosummary::
    :toctree: my_doc
 
-
    data_process.apply_transformations
       :alias: apply_transformations
    quick_anomaly_detector.data_process.calculate_metrics
       :alias: calculate_metrics
    quick_anomaly_detector.data_process.check_valid_tensor_data
+      :alias: check_valid_tensor_data
 
    quick_anomaly_detector.data_process.graph_scatter
    quick_anomaly_detector.data_process.graph_multiple_histograms
