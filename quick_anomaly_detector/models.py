@@ -479,7 +479,7 @@ class TrainEmbedding:
             'U': 47, 'V': 48, 'W': 49, 'X': 50, 'Y': 51, 'Z': 52, 
             '0': 53, '1': 54, '2': 55, '3': 56, '4': 57, '5': 58, '6': 59, '7': 60, '8': 61, '9': 62,
             '.': 63, '-': 64, ' ': 65, '@': 66, '?': 67, '/': 68,  "'": 69, "|": 70, 
-            '+': 71}
+            '+': 71, }
         self.max_length = 0
         self.batch_size = batch_size
         self.vocab_size = len(self.letter_to_number)+1
@@ -487,6 +487,8 @@ class TrainEmbedding:
         self.best_loss = np.inf
         self.train_loss_arr = []
         self.valid_loss_arr = []
+        self.feature_name = None
+        self.label_name = None
 
     def get_encode(self, x):
         encoded_name = [self.letter_to_number[letter] for letter in x if letter in self.letter_to_number]
@@ -499,6 +501,8 @@ class TrainEmbedding:
                 sequences[i] = sequences[i][:max_length]
         return sequences
     def train(self, df_train, df_valid, feature_name, label_name):
+        self.feature_name = feature_name
+        self.label_name = label_name
         df_train['encoded_features'] = df_train[feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         df_valid['encoded_features'] = df_valid[feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         train_sequences = df_train['encoded_features'].tolist()
@@ -574,6 +578,28 @@ class TrainEmbedding:
                 self.stop_step = epoch
                 self.best_loss = best_loss
                 break
+    def predict(self, X, y=None):
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
+        X['encoded_features'] = X[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
+        x_sequences = X['encoded_features'].tolist()
+        x_sequences = self.padding(x_sequences, self.max_length)
+        x_sequences = torch.LongTensor(x_sequences)
+        x_labels = X[self.label_name].values
+        x_labels = torch.LongTensor(x_labels)
+        x_dataset = TensorDataset(x_sequences, x_labels)
+        x_loader = DataLoader(x_dataset, batch_size=self.batch_size, shuffle=False)
+        with torch.no_grad():
+            predictions = []
+            labels = []
+            for x_sequences, x_labels in x_loader:
+                x_output = self.model(x_sequences)
+                # x_probs = torch.softmax(x_output, dim=1)
+                # x_preds = torch.argmax(x_probs, dim=1)
+                item_preds = [item for item in x_output.tolist()]
+                predictions = predictions + item_preds
+                labels = labels + x_labels.tolist()
+        return predictions
 
 
 
