@@ -5,6 +5,12 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import LabelEncoder
 from scipy.stats import multivariate_normal
 
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset
+from torch.utils.data import DataLoader, TensorDataset
+import torch.optim as optim
+
 #########################################
 #   Gaussian Based Anomaly Detection    #
 #########################################
@@ -133,8 +139,6 @@ class AnomalyDetectionModel:
 #########################################
 #      NN Based Anomaly Detection       #
 #########################################
-import torch
-import torch.nn as nn
 class AnomalyDetectionNN(nn.Module):
     """
     AnomalyDetectionNN is a neural network model designed for anomaly detection tasks.
@@ -229,9 +233,6 @@ class AnomalyDetectionNN(nn.Module):
 ################################################
 #          Train Anomaly NN model              #
 ################################################
-from torch.utils.data import DataLoader, TensorDataset
-import torch.optim as optim
-
 class TrainAnomalyNN:
     """
     Class for training and using an anomaly detection neural network.
@@ -495,22 +496,21 @@ class TrainEmbedding:
     def train(self, df_train, df_valid, feature_name, label_name):
         df_train['encoded_features'] = df_train[feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         df_valid['encoded_features'] = df_valid[feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
-        train_sequences = df_train['encoded_names'].tolist()
-        val_sequences = df_valid['encoded_names'].tolist()
+        train_sequences = df_train['encoded_features'].tolist()
+        val_sequences = df_valid['encoded_features'].tolist()
 
         self.max_length = max(len(name) for name in train_sequences)
         train_sequences = self.padding(train_sequences, self.max_length)
         val_sequences = self.padding(val_sequences, self.max_length)
 
-        train_labels = df_train['Anomaly'].values
-        val_labels = df_valid['Anomaly'].values
+        train_labels = df_train[label_name].values
+        val_labels = df_valid[label_name].values
         return train_sequences, val_sequences, train_labels, val_labels
 
 
 #########################################
 #      Classification NN model          #
 #########################################
-from torch.utils.data import Dataset
 class ClassificationDataset(Dataset):
     def __init__(self, inputs, labels):
         self.inputs = inputs
