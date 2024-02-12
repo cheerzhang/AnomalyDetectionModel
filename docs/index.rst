@@ -9,36 +9,8 @@ Check out the :doc:`quick_start` section for further information.
    :maxdepth: 10
 
    quick_start
+   data
    models
-
-.. currentmodule:: quick_anomaly_detector
-
-.. autosummary::
-   :toctree: my_doc
-
-   data_process.apply_transformations
-   :alias: apply_transformations
-   
-   data_process.calculate_metrics
-   :alias: calculate_metrics
-   
-   data_process.check_valid_tensor_data
-   :alias: check_valid_tensor_data
-
-   data_process.graph_scatter
-   data_process.graph_multiple_histograms
-   data_process.category_hist_graph
-
-   models.AnomalyDetectionModel
-   models.AnomalyDetectionNN
-   models.TrainAnomalyNN
-   models.KMeansModel
-   models.ImputerNa
-   models.SelectFeatures
-   models.LowerStr
-   models.LengthStr
-   models.LogTransform
-   models.NumericDataType
 
 
 Additional Information
