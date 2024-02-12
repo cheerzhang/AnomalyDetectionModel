@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='quick-anomaly-detector',
-    version='0.1.36',
+    version='0.1.38',
     author="ZhangLe",
     author_email="zhangle@gmail.com",
     description="models class for quick Anomaly Detection",
