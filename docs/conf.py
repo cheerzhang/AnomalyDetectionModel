@@ -11,8 +11,8 @@ project = 'quick-anomaly-detector'
 copyright = '2024, LeZhang'
 author = 'LeZhang'
 
-release = '0.3.4'
-version = '0.3.3'
+release = '0.3.6'
+version = '0.3.6'
 
 # -- General configuration
 
