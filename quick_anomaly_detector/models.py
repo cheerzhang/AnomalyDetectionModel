@@ -524,7 +524,7 @@ class TrainEmbedding:
         dropout = 0.5
     
         self.model = TransformerModel(
-            ntoken=self.ocab_size, 
+            ntoken=self.vocab_size, 
             d_model=embedding_dim, 
             nhead=nhead, 
             d_hid=d_hid, 
