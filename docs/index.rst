@@ -10,12 +10,12 @@ Check out the :doc:`quick_start` section for further information.
 
    quick_start
 
-.. currentmodule:: sphinx
+.. currentmodule:: quick_anomaly_detector
 
 .. autosummary::
    :toctree: generated
 
-   quick_anomaly_detector.data_process.apply_transformations
+   data_process.apply_transformations
       :alias: apply_transformations
    quick_anomaly_detector.data_process.calculate_metrics
    quick_anomaly_detector.data_process.check_valid_tensor_data
