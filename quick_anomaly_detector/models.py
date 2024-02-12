@@ -231,8 +231,6 @@ class AnomalyDetectionNN(nn.Module):
 ################################################
 from torch.utils.data import DataLoader, TensorDataset
 import torch.optim as optim
-from .data_process import check_valid_tensor_data
-
 
 class TrainAnomalyNN:
     """
@@ -485,7 +483,7 @@ class ClassificationDataset(Dataset):
         return input_data, label
 
 
-class NNModel(nn.Module):
+class ClassificationNNModel(nn.Module):
     def __init__(self, input_dim, min_vals = None, max_vals = None):
         """
         """

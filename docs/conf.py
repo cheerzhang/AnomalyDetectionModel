@@ -2,7 +2,7 @@ import sys, os
 
 
 # Configuration file for the Sphinx documentation builder.
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../quick_anomaly_detector/'))
 
 
 # -- Project information
@@ -11,8 +11,8 @@ project = 'quick-anomaly-detector'
 copyright = '2024, LeZhang'
 author = 'LeZhang'
 
-release = '0.3.6'
-version = '0.3.6'
+release = '0.3.7'
+version = '0.3.7'
 
 # -- General configuration
 

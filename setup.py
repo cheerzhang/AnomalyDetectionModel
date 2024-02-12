@@ -30,7 +30,8 @@ setuptools.setup(
         'matplotlib >= 3.7.1',
         'SciPy >= 1.11.4',
         'cdifflib >= 1.2.6',
-        'torch >= 2.2.0'
+        'torch >= 2.2.0',
+        'scikit-learn >= 1.4.0'
     ],
     python_requires=">=3.9",
 )
