@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import LabelEncoder
 from scipy.stats import multivariate_normal
 
 #########################################
@@ -768,3 +769,21 @@ class Similarity(BaseEstimator):
             return float(len(c)) / (len(a) + len(b) - len(c))
         df.loc[:, 'similarity_score'] = df.apply(lambda row: jaccard_similarity(row[column_str_1], row[column_str_2]), axis=1)
         return df['similarity_score'].values
+
+
+
+#####################################
+#            Label Encode           #
+#####################################
+class LabelEncode(BaseEstimator):
+    def __init__(self, features):
+        self.features = features
+        self.label_encoder = LabelEncoder()
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        for col in self.features:
+            self.label_encoder.fit(X_[col])
+            X_[f'{col}_encode'] = self.label_encoder.transform(X_[col])
+        return X_
