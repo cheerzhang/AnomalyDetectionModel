@@ -589,11 +589,13 @@ class TrainEmbedding:
         x_labels = torch.LongTensor(x_labels)
         x_dataset = TensorDataset(x_sequences, x_labels)
         x_loader = DataLoader(x_dataset, batch_size=self.batch_size, shuffle=False)
+        predictions = []
+        labels = []
+        self.model.eval()
         with torch.no_grad():
-            predictions = []
-            labels = []
             for x_sequences, x_labels in x_loader:
                 x_output = self.model(x_sequences)
+                print(x_output.size())
                 # x_probs = torch.softmax(x_output, dim=1)
                 # x_preds = torch.argmax(x_probs, dim=1)
                 item_preds = [item for item in x_output.tolist()]
