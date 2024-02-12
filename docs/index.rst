@@ -10,6 +10,8 @@ Check out the :doc:`quick_start` section for further information.
 
    quick_start
 
+.. currentmodule:: sphinx
+
 .. autosummary::
    :toctree: generated
 
@@ -20,6 +22,7 @@ Check out the :doc:`quick_start` section for further information.
 
    quick_anomaly_detector.data_process.graph_scatter
    quick_anomaly_detector.data_process.graph_multiple_histograms
+   quick_anomaly_detector.data_process.category_hist_graph
 
 
    quick_anomaly_detector.models.AnomalyDetectionModel

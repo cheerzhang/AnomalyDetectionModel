@@ -12,7 +12,7 @@ copyright = '2024, LeZhang'
 author = 'LeZhang'
 
 release = '0.2'
-version = '0.2.6'
+version = '0.2.7'
 
 # -- General configuration
 

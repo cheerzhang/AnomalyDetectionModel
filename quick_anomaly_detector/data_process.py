@@ -68,6 +68,17 @@ def graph_multiple_histograms(df, columns, layout=(2, 2), bin_numbers=None):
     plt.tight_layout()
     return fig
 
+def category_hist_graph(df, category_column):
+    """
+    This function is for plot the histograms of category feature
+    """
+    category_counts = df[category_column].value_counts()
+    fig, ax = plt.subplots()
+    category_counts.plot(kind='bar')
+    ax.set_xlabel(category_column)
+    ax.set_ylabel('Frequency')
+    ax.set_title(f'Histogram of {category_column}')
+    return fig, category_counts
 
 
 ##################################################
