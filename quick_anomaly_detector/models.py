@@ -465,6 +465,39 @@ class TransformerModel(nn.Module):
         return output
 
 
+
+
+#########################################
+#           Embedding NN model          #
+#########################################
+class NNModel(nn.Module):
+    def __init__(self, input_dim, min_vals = None, max_vals = None):
+        """
+        """
+        super(AnomalyDetectionNN, self).__init__()
+        self.min_vals = min_vals
+        self.max_vals = max_vals
+        self.fc1 = nn.Linear(input_dim, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, 1)  # same as input, for loss calculation
+    def __init__(self, input_dim, min_vals = None, max_vals = None):
+        super(AnomalyDetectionNN, self).__init__()
+        self.min_vals = min_vals
+        self.max_vals = max_vals
+        self.fc1 = nn.Linear(input_dim, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, 1)  # output size is 1
+    def forward(self, x):
+        x = self.fc1(x)   # input shape is (1, N, M), N is samples number, M is feaures number
+        x = torch.relu(x)
+        x = self.fc2(x)
+        x = torch.relu(x)
+        x = self.fc3(x)
+        x = torch.sigmoid(x)  # Apply sigmoid activation to squash output between 0 and 1
+        return x
+
+
+
 #########################################
 #          K-Means Cluster              #
 #########################################
