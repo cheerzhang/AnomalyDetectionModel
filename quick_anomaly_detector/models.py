@@ -577,6 +577,17 @@ class TrainClassificationNN:
                 self.stop_step = epoch
                 self.best_loss = best_loss
                 break
+    def predict(self, X, y_val=None, threshold = 0.5):
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
+        with torch.no_grad():
+            normalized_data = self._normalize_data(X, True)
+            # valid_dataset = ClassificationDataset(torch.tensor(normalized_data, dtype=torch.float32), torch.tensor(y_val, dtype=torch.float32))
+            X_tensor = torch.tensor(normalized_data, dtype=torch.float32)
+            self.model.eval()
+            predict = self.model(X_tensor)
+            predictions = (predict > threshold).int()
+        return predictions, predict
             
 
 
