@@ -124,6 +124,33 @@ def graph_scatter(df, x_column, y_column, color_column):
 
 
 
+##################################################
+#        Check Wrongly-Predicted Data           #
+##################################################
+def check_wrong(df, predict='predict', label='label'):
+    """
+    `check_wrong` is a function to calculate the predicted wrongly df
+
+    :param df: The pandas DataFrame containing the data.
+    :type df: pandas.DataFrame
+
+    :param predict: the column name of predict 
+    :type predict: string
+
+    :param label: the column name of label 
+    :type label: string
+
+    :return: df_tn, df_fn, df_tp, df_fp dataframe
+    :rtype: [pandas.DataFrame, pandas.DataFrame, pandas.DataFrame, pandas.DataFrame]
+
+    """
+    df_tn = df[(df[predict] == 0) & (df[label] == 0)]
+    df_fp = df[(df[predict] == 1) & (df[label] == 0)]
+    df_fn = df[(df[predict] == 0) & (df[label] == 1)]
+    df_tp = df[(df[predict] == 1) & (df[label] == 1)]
+    return df_tn, df_fn, df_tp, df_fp
+
+
 
 ##################################################
 #         Log Sqaure feature transform           #

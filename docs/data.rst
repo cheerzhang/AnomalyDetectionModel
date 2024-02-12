@@ -20,3 +20,5 @@ Data Process
    data_process.graph_scatter
    data_process.graph_multiple_histograms
    data_process.category_hist_graph
+
+   data_process.check_wrong
