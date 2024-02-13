@@ -283,3 +283,45 @@ def calculate_metrics(actual_labels, predicted_labels):
     return metrics
 
 
+
+#########################################
+#              Location API             #
+#########################################
+address_json = {
+    "amsterdam": {"lat": 52.3676, "lon": 4.9041},
+    "rotterdam": {"lat": 51.9244, "lon": 4.4777},
+    "'s-gravenhage": {"lat": 52.0705, "lon": 4.3007},
+    "almere": {"lat": 52.3508, "lon": 5.2647},
+    "eindhoven": {"lat": 51.4231, "lon": 5.4623},
+    "utrecht": {"lat": 52.0907, "lon": 5.1214},
+    "enschede": {"lat": 52.2215, "lon": 6.8937},
+    "tilburg": {"lat": 51.5606, "lon": 5.0919},
+    "arnhem": {"lat": 51.9851, "lon": 5.8987},
+    "breda": {"lat": 51.5719, "lon": 4.7683},
+    "den haag": {"lat": 52.0705, "lon": 4.3007},
+    "groningen": {"lat": 53.2194, "lon": 6.5665}, 
+    "dordrecht": {"lat": 51.8133, "lon": 4.6901}, 
+    "nijmegen": {"lat": 51.8433, "lon": 5.8609}, 
+    "apeldoorn": {"lat": 52.2112, "lon": 5.9699}, 
+    "zoetermeer": {"lat": 52.0607, "lon": 4.4940}, 
+    "amersfoort": {"lat": 52.1561, "lon": 5.3878}, 
+    "almelo": {"lat": 52.3670, "lon": 6.6685}, 
+    "zwolle": {"lat": 52.5168, "lon": 6.0830}, 
+    "'s-hertogenbosch": {"lat": 51.6978, "lon": 5.3037},
+    "leeuwarden": {"lat": 53.2012, "lon": 5.7999}, 
+    "haarlem": {"lat": 52.3874, "lon": 4.6462}, 
+    "leiden": {"lat": 52.1636, "lon": 4.4802}, 
+    "schiedam": {"lat": 51.9170, "lon": 4.3988}, 
+    "delft": {"lat": 52.0116, "lon": 4.3571}, 
+    "lelystad": {"lat": 52.5185, "lon": 5.4714}, 
+    "heerlen": {"lat": 50.8860, "lon": 5.9804}, 
+    "helmond": {"lat": 51.4793, "lon": 5.6570}, 
+    "alkmaar": {"lat": 52.6324, "lon": 4.7534}, 
+    "roosendaal": {"lat": 51.5358, "lon": 4.4653}, 
+}
+def location_json(city='', street=''):
+    lat, lon = [None, None]
+    if city != '':
+        if city in address_json.keys():
+            lat, lon = address_json[city]['lat'], address_json[city]['lon']
+    return lat, lon
