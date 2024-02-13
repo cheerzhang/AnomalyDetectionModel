@@ -1114,9 +1114,9 @@ class LabelEncode(BaseEstimator):
 #####################################
 class Padding(BaseEstimator, TransformerMixin):
     """This class is for data pipeline that padding for str columns"""
-    def __init__(self, features):
+    def __init__(self, features, max_lengths=None):
         self.features = features
-        self.max_lengths = None
+        self.max_lengths = max_lengths
     def fit(self, X, y=None):
         return self
     def transform(self, X, y=None):
@@ -1125,7 +1125,7 @@ class Padding(BaseEstimator, TransformerMixin):
             X_[col] = X_[col].str.pad(width=max_length, side='right', fillchar='-')
         return X_
     def fit_transform(self, X, y=None):
-        X_ = X.copy() 
+        X_ = X.copy()
         self.max_lengths = {}
         for col in self.features:
             max_length = X_[col].str.len().max()
