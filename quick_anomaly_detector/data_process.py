@@ -287,7 +287,7 @@ def calculate_metrics(actual_labels, predicted_labels):
 #########################################
 #              Location API             #
 #########################################
-from json_file import address_json
+from .json_file import address_json
 def location_json(city='', street=''):
     lat, lon = [None, None]
     if city != '':
