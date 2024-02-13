@@ -17,6 +17,7 @@ Models
    models.SelectFeatures
    models.LowerStr
    models.LengthStr
+   models.convertStr
    models.LogTransform
    models.NumericDataType
    models.Padding
