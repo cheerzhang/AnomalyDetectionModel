@@ -464,7 +464,8 @@ class TransformerModel(nn.Module):
         return output
 
 class TrainEmbedding:
-    def __init__(self, lr=0.001, num_epochs=1000, patience=10, batch_size=32):
+    def __init__(self, lr=0.001, num_epochs=1000, patience=10, batch_size=32, 
+                 embedding_dim = 4, nhead = 8, d_hid=64, nlayers = 2, dropout = 0.5):
         self.lr = lr
         self.num_epochs = num_epochs
         self.patience = patience
@@ -483,6 +484,11 @@ class TrainEmbedding:
         self.max_length = 0
         self.batch_size = batch_size
         self.vocab_size = len(self.letter_to_number)+1
+        self.embedding_dim = embedding_dim
+        self.nhead = nhead
+        self.d_hid = d_hid
+        self.nlayers = nlayers
+        self.dropout = dropout
         self.stop_step = 0
         self.best_loss = np.inf
         self.train_loss_arr = []
@@ -524,19 +530,13 @@ class TrainEmbedding:
         val_dataset = TensorDataset(val_sequences, val_labels)
         val_loader = DataLoader(val_dataset, batch_size=self.batch_size, shuffle=False)
 
-        embedding_dim = 4
-        nhead = 1
-        d_hid = 64
-        nlayers  = 1
-        dropout = 0.5
-    
         self.model = TransformerModel(
             ntoken=self.vocab_size, 
-            d_model=embedding_dim, 
-            nhead=nhead, 
-            d_hid=d_hid, 
-            nlayers=nlayers, 
-            dropout=dropout, 
+            d_model=self.embedding_dim, 
+            nhead=self.nhead, 
+            d_hid=self.d_hid, 
+            nlayers=self.nlayers, 
+            dropout=self.dropout, 
             sequence_length=self.max_length)
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
         ratio1 =  train_labels.sum() / len(train_labels)
