@@ -928,41 +928,9 @@ class ImputerNa(BaseEstimator, TransformerMixin):
         self.fill_values = fill_values
 
     def fit(self, X, y=None):
-        """
-        Fit the imputer to the data.
-
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input data.
-
-        y : array-like of shape (n_samples,), default=None
-            Ignored.
-
-        Returns
-        -------
-        self : object
-            Returns self.
-        """
         return self
 
     def transform(self, X, y=None):
-        """
-        Transform the data by imputing missing values and preserving column names.
-
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The input data.
-
-        y : array-like of shape (n_samples,), default=None
-            Ignored.
-
-        Returns
-        -------
-        X_imputed : pandas.DataFrame of shape (n_samples, n_features)
-            The transformed data with imputed missing values and preserved column names.
-        """
         X_filled = X.copy()
         X_filled = X_filled.fillna(self.fill_values)
         return X_filled
