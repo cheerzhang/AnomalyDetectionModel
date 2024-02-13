@@ -567,6 +567,7 @@ class TrainEmbedding:
                     val_output = self.model(val_sequences)
                     val_loss += self.criterion(val_output, val_labels).item()
             avg_val_loss = val_loss / len(val_loader)
+            print(f"epoch {epoch}: train loss: {avg_loss}, val loss: {avg_val_loss}.")
             self.valid_loss_arr.append(avg_val_loss)
             # early stop
             if avg_val_loss < best_loss:
