@@ -779,11 +779,24 @@ class trainXGB:
             evals=[(dtrain, 'train'), (dvalid, 'valid')], 
             early_stopping_rounds=self.patience,
             num_boost_round=self.num_epochs,
-            verbose_eval=True,
+            verbose_eval=False,
             evals_result=evals_result
         )
         self.train_loss_arr = evals_result['train']['logloss']
         self.valid_loss_arr = evals_result['valid']['logloss']
+    def predict(self, X, features = None, label=None):
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
+        if features is not None:
+            self.features = features
+        if label is not None:
+            self.label = label
+        x_test = X[self.features].values
+        y_test = X[[self.label]].values
+        dtest = xgb.DMatrix(x_test, label=y_test, feature_names=self.features)
+        pred_ = self.model.predict(dtest)
+        return pred_
+
 
 #########################################
 #          K-Means Cluster              #
