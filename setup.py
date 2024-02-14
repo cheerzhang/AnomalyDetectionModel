@@ -31,7 +31,8 @@ setuptools.setup(
         'SciPy >= 1.11.4',
         'cdifflib >= 1.2.6',
         'torch >= 2.2.0',
-        'scikit-learn >= 1.4.0'
+        'scikit-learn >= 1.4.0',
+        'xgboost >= 2.0.3'
     ],
     python_requires=">=3.9",
 )
