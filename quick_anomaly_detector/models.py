@@ -766,7 +766,7 @@ class trainXGB:
         x_val = valid_df[self.features].values
         y_val = valid_df[[self.label]].values
         dtrain = xgb.DMatrix(x_train, label=y_train, feature_names=self.features)
-        dvalid = xgb.DMatrix(x_val.values, label=y_val.values, feature_names=self.features)
+        dvalid = xgb.DMatrix(x_val, label=y_val, feature_names=self.features)
         self.model_params['scale_pos_weight'] = ((y_train.count() - y_train.sum())/y_train.sum()).values[0], # label=0 / label=1
         evals_result = {}
         self.model = xgb.train(
