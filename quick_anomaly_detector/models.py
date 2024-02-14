@@ -11,6 +11,8 @@ from torch.utils.data import Dataset
 from torch.utils.data import DataLoader, TensorDataset
 import torch.optim as optim
 
+import xgboost as xgb
+
 #########################################
 #   Gaussian Based Anomaly Detection    #
 #########################################
@@ -730,6 +732,54 @@ class TrainClassificationNN:
             
 
 
+
+#########################################
+#      Classification XGB model          #
+#########################################
+class trainXGB:
+    def __init__(self, num_epochs = 1000, patience = 5, lr=0.01, subsample=0.6, colsample_bytree=0.6):
+        self.features = []
+        self.label = 'label'
+        self.patience = patience
+        self.num_epochs = num_epochs
+        self.model_params = {
+            'objective': 'binary:logistic',
+            'eval_metric': 'logloss',
+            'max_depth': 6,
+            'learning_rate': lr,
+            'subsample': subsample,
+            'colsample_bytree': colsample_bytree,
+            'seed': 42,
+            'n_jobs': -1,
+            'reg_alpha': 1,
+            'reg_lambda': 0
+        }
+        self.model = None
+        self.train_loss_arr = None
+        self.valid_loss_arr = None
+    def train(self, train_df, valid_df, features, label = None):
+        self.features = features
+        if label is not None:
+            self.label = label
+        x_train = train_df[self.features].values
+        y_train = train_df[[self.label]].values
+        x_val = valid_df[self.features].values
+        y_val = valid_df[[self.label]].values
+        dtrain = xgb.DMatrix(x_train, label=y_train, feature_names=self.features)
+        dvalid = xgb.DMatrix(x_val.values, label=y_val.values, feature_names=self.features)
+        self.model_params['scale_pos_weight'] = ((y_train.count() - y_train.sum())/y_train.sum()).values[0], # label=0 / label=1
+        evals_result = {}
+        self.model = xgb.train(
+            params=self.model_params, 
+            dtrain=dtrain, 
+            evals=[(dtrain, 'train'), (dvalid, 'valid')], 
+            early_stopping_rounds=self.patience,
+            num_boost_round=self.num_epochs,
+            verbose_eval=True,
+            evals_result=evals_result
+        )
+        self.train_loss_arr = evals_result['train']['logloss']
+        self.valid_loss_arr = evals_result['valid']['logloss']
 
 #########################################
 #          K-Means Cluster              #
