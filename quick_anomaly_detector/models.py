@@ -796,6 +796,10 @@ class trainXGB:
         dtest = xgb.DMatrix(x_test, label=y_test, feature_names=self.features)
         pred_ = self.model.predict(dtest)
         return pred_
+    def display_feature_importance(self):
+        fig, ax = plt.subplots()
+        xgb.plot_importance(self.model, ax=ax)
+        return fig
 
 
 #########################################
