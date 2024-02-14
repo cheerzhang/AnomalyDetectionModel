@@ -797,6 +797,7 @@ class trainXGB:
         pred_ = self.model.predict(dtest)
         return pred_
     def display_feature_importance(self):
+        """display importance of xgb model"""
         fig, ax = plt.subplots()
         xgb.plot_importance(self.model, ax=ax)
         return fig
