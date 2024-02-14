@@ -12,6 +12,7 @@ Models
    models.TrainAnomalyNN
    models.TrainEmbedding
    models.TrainClassificationNN
+   models.trainXGB
    models.KMeansModel
    models.ImputerNa
    models.SelectFeatures
