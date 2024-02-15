@@ -356,16 +356,7 @@ class TrainAnomalyNN:
         self.features = None
     
     def _normalize_data(self, X, isValid=False):
-        """
-        Normalizes the input data.
-
-        Args:
-        - X (numpy.ndarray): The input data to be normalized.
-        - isValid (bool): Whether the input data is from the validation dataset (default: False).
-
-        Returns:
-        - normalized_data (numpy.ndarray): The normalized input data.
-        """
+        """Normalizes the input data."""
         if isValid:
             min_vals = self.train_min_values
             max_vals = self.train_max_values
@@ -385,7 +376,7 @@ class TrainAnomalyNN:
         - X_train (numpy.ndarray): The training data.
         - X_valid (numpy.ndarray): The validation data.
         """
-        if features:
+        if features is not None:
             self.features = features
         X_train = train_df[self.features].values
         X_valid = valid_df[self.features].values
