@@ -139,6 +139,7 @@ class AnomalyGaussianModel:
         p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
         outliers = p_values < self.epsilon
         return outliers
+  
     def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
         """
         If you need credential, make sure you have them in your environment:   

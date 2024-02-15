@@ -13,7 +13,7 @@ pypi page link is here:(https://pypi.org/project/quick-anomaly-detector/)
 ### Quick Start
 #### Installation
 
-You can install `Anomaly DetectionModel` using pip:
+You can install `Anomaly Detection Model` using pip:
 
 ```
 pip install quick-anomaly-detector
@@ -21,11 +21,11 @@ pip install quick-anomaly-detector
 
 Quick Start:   
 ```
-from quick_anomaly_detector.models import AnomalyDetectionModel
+from quick_anomaly_detector.models import AnomalyGaussianModel
 
 
 # Load your datasets (X_train, X_val, y_val)
-model = AnomalyDetectionModel()
+model = AnomalyGaussianModel()
 
 # Train the model
 model.train(X_train, X_val, y_val)
