@@ -19,9 +19,9 @@ import mlflow, datetime
 #   Gaussian Based Anomaly Detection    #
 #########################################
 # select epsilon base on F1
-class AnomalyDetectionModel:
+class AnomalyGaussianModel:
     """
-    Anomaly Detection Model using Gaussian Distribution.
+    Anomaly Gaussian Model using Gaussian Distribution.
 
     This class provides a simple implementation of an anomaly detection model
     based on the Gaussian distribution. It includes methods for estimating
@@ -39,13 +39,13 @@ class AnomalyDetectionModel:
 
     .. code-block:: python
 
-        from quick_anomaly_detector.models import AnomalyDetectionModel
+        from quick_anomaly_detector.models import AnomalyGaussianModel
 
         # Load your datasets (X_train, X_val, y_val)
         # ...
 
-        # Create an instance of AnomalyDetectionModel
-        model = AnomalyDetectionModel()
+        # Create an instance of AnomalyGaussianModel
+        model = AnomalyGaussianModel()
 
         # Train the model
         model.train(X_train, X_val, y_val)
@@ -72,6 +72,8 @@ class AnomalyDetectionModel:
         self.p_values_val = 0
         self.epsilon = 0.05
         self.f1 = 0
+        self.trainset = None
+        self.validset = None
     
     def estimate_gaussian(self, X):
         m, n = X.shape
@@ -101,8 +103,7 @@ class AnomalyDetectionModel:
                 best_F1 = F1
                 best_epsilon = epsilon
         return best_epsilon, best_F1
-    
-
+   
     def train(self, X_train, X_val, y_val):
         """
         Train the AnomalyDetectionModel.
@@ -116,6 +117,8 @@ class AnomalyDetectionModel:
             :param y_val: Ground truth labels for validation data.
             :type y_val: ndarray
         """
+        self.trainset = X_train
+        self.validset = X_val
         self.mu_train, self.var_train = self.estimate_gaussian(X_train)
         self.p_values_train = self.calculate_p_value(X_train, self.mu_train, self.var_train)
         self.p_values_val = self.calculate_p_value(X_val, self.mu_train, self.var_train)
@@ -136,6 +139,39 @@ class AnomalyDetectionModel:
         p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
         outliers = p_values < self.epsilon
         return outliers
+    def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
+        """
+        If you need credential, make sure you have them in your environment:   
+
+        .. code-block:: python
+
+            os.environ['AWS_ACCESS_KEY_ID'] = os.environ.get("AWS_ACCESS_KEY_ID")
+            os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ.get("AWS_SECRET_ACCESS_KEY")
+            os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
+            os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
+        """
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
+        try:
+            mlflow.set_tracking_uri(model_uri)
+            mlflow.set_experiment(experiment_id)
+            now = datetime.datetime.now()
+            with mlflow.start_run(experiment_id=experiment_id, run_name=f"{r_name}_{now}") as run:
+                trainset = mlflow.data.from_pandas(self.trainset)
+                validset = mlflow.data.from_pandas(self.validset)
+                mlflow.log_input(trainset, context="trainset")
+                mlflow.log_input(validset, context="validset")
+                for metric_name, metric_value in metrics.items():
+                    if isinstance(metric_value, (int, float)):
+                        mlflow.log_metric(metric_name, metric_value)
+                mlflow.log_param("mu", self.mu_train)
+                mlflow.log_param("var", self.var_train)
+                mlflow.log_param("epsilon", self.epsilon)
+                # mlflow.pyfunc.log_model(artifact_path="", python_model=self.predict)
+                mlflow.end_run()
+            return True
+        except Exception as e:
+            raise e
 
 
 

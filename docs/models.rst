@@ -8,7 +8,7 @@ Models
 .. autosummary::
    :toctree: my_doc
 
-   models.AnomalyDetectionModel
+   models.AnomalyGaussianModel
    models.TrainAnomalyNN
    models.TrainEmbedding
    models.TrainClassificationNN
