@@ -62,7 +62,7 @@ class AnomalyGaussianModel:
         This class is designed for educational purposes and may not be suitable for all types of data.
     """
 
-    def __init__(self):
+    def __init__(self, features=None, label=None):
         """
         Initialize the AnomalyDetectionModel.
         """
@@ -74,6 +74,8 @@ class AnomalyGaussianModel:
         self.f1 = 0
         self.trainset = None
         self.validset = None
+        self.features = features
+        self.label = label
     
     def estimate_gaussian(self, X):
         m, n = X.shape
@@ -104,7 +106,7 @@ class AnomalyGaussianModel:
                 best_epsilon = epsilon
         return best_epsilon, best_F1
    
-    def train(self, X_train, X_val, y_val):
+    def train(self, train_df, valid_df, features=None, label=None):
         """
         Train the AnomalyDetectionModel.
 
@@ -117,8 +119,15 @@ class AnomalyGaussianModel:
             :param y_val: Ground truth labels for validation data.
             :type y_val: ndarray
         """
-        self.trainset = X_train
-        self.validset = X_val
+        if features is not None:
+            self.features = features
+        if label is not None:
+            self.label = label
+        self.trainset = train_df
+        self.validset = valid_df
+        X_train = train_df[self.features].values
+        X_val = valid_df[self.features].values
+        y_val = valid_df[self.label].values
         self.mu_train, self.var_train = self.estimate_gaussian(X_train)
         self.p_values_train = self.calculate_p_value(X_train, self.mu_train, self.var_train)
         self.p_values_val = self.calculate_p_value(X_val, self.mu_train, self.var_train)
@@ -136,7 +145,8 @@ class AnomalyGaussianModel:
             :return: Boolean array indicating whether each sample is an outlier.
             :rtype: ndarray
         """
-        p_values = self.calculate_p_value(X, self.mu_train, self.var_train)
+        X_ = X[self.features]
+        p_values = self.calculate_p_value(X_, self.mu_train, self.var_train)
         outliers = p_values < self.epsilon
         return outliers
   
