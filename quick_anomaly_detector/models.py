@@ -718,8 +718,8 @@ class TrainEmbedding:
             mlflow.set_experiment(experiment_id)
             now = datetime.datetime.now()
             with mlflow.start_run(experiment_id=experiment_id, run_name=f"{r_name}_{now}") as run:
-                trainset = mlflow.data.from_pandas(self.trainset, target=self.label_name)
-                validset = mlflow.data.from_pandas(self.validset, target=self.label_name)
+                trainset = mlflow.data.from_pandas(self.trainset, targets=self.label_name)
+                validset = mlflow.data.from_pandas(self.validset, targets=self.label_name)
                 mlflow.log_input(trainset, context="trainset")
                 mlflow.log_input(validset, context="validset")
                 for metric_name, metric_value in metrics.items():
