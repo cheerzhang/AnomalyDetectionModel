@@ -589,6 +589,8 @@ class TrainEmbedding:
         self.valid_loss_arr = []
         self.feature_name = None
         self.label_name = None
+        self.trainset = None
+        self.validset = None
 
     def get_encode(self, x):
         encoded_name = [self.letter_to_number[letter] for letter in x if letter in self.letter_to_number]
@@ -605,6 +607,8 @@ class TrainEmbedding:
         self.label_name = label_name
         df_train['encoded_features'] = df_train[feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         df_valid['encoded_features'] = df_valid[feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
+        self.trainset = df_train[['encoded_features', label_name]]
+        self.validset = df_valid[['encoded_features', label_name]]
         train_sequences = df_train['encoded_features'].tolist()
         val_sequences = df_valid['encoded_features'].tolist()
 
@@ -696,6 +700,50 @@ class TrainEmbedding:
                 predictions = predictions + item_preds
                 labels = labels + x_labels.tolist()
         return predictions
+    def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
+        """
+        If you need credential, make sure you have them in your environment:   
+
+        .. code-block:: python
+
+            os.environ['AWS_ACCESS_KEY_ID'] = os.environ.get("AWS_ACCESS_KEY_ID")
+            os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ.get("AWS_SECRET_ACCESS_KEY")
+            os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
+            os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
+        """
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
+        try:
+            mlflow.set_tracking_uri(model_uri)
+            mlflow.set_experiment(experiment_id)
+            now = datetime.datetime.now()
+            with mlflow.start_run(experiment_id=experiment_id, run_name=f"{r_name}_{now}") as run:
+                trainset = mlflow.data.from_pandas(self.trainset, label=self.label_name)
+                validset = mlflow.data.from_pandas(self.validset, label=self.label_name)
+                mlflow.log_input(trainset, context="trainset")
+                mlflow.log_input(validset, context="validset")
+                for metric_name, metric_value in metrics.items():
+                    if isinstance(metric_value, (int, float)):
+                        mlflow.log_metric(metric_name, metric_value)
+                mlflow.log_param("vocab_size", self.vocab_size)
+                mlflow.log_param("lr", self.lr)
+                mlflow.log_param("embedding_dim", self.embedding_dim)
+                mlflow.log_param("nhead", self.nhead)
+                mlflow.log_param("d_hid", self.d_hid)
+                mlflow.log_param("nlayers", self.nlayers)
+                mlflow.log_param("dropout", self.dropout)
+                mlflow.log_param("stop_step", self.stop_step)
+                mlflow.log_param("best_loss", self.best_loss)
+                mlflow.log_param("features", self.feature_name)
+                if registered_model_name is None:
+                    mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path="Embedding")
+                else:
+                    mlflow.pytorch.log_model(artifact_path="Embedding", pytorch_model=self.model, registered_model_name = registered_model_name)
+                mlflow.end_run()
+            return True
+        except Exception as e:
+            raise e
+
 
 
 
