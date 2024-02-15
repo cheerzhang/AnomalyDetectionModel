@@ -413,6 +413,7 @@ class TrainAnomalyNN:
             self.train_loss_arr.append(epoch_loss)
             # print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {epoch_loss:.4f}") # traning loss
             # Evaluate validation loss
+            self.model.eval()
             with torch.no_grad():
                 valid_loss = 0.0
                 for valid_inputs in valid_loader:
@@ -468,6 +469,8 @@ class TrainAnomalyNN:
             os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
             os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
         """
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
         try:
             mlflow.set_tracking_uri(model_uri)
             mlflow.set_experiment(experiment_id)
@@ -487,14 +490,10 @@ class TrainAnomalyNN:
                 mlflow.log_param("train_min_values", self.train_min_values)
                 mlflow.log_param("train_max_values", self.train_max_values)
                 mlflow.log_param("features", self.features)
-                mlflow.log_param("features", self.features)
-                mlflow.log_param("features", self.features)
-                mlflow.log_param("features", self.features)
-                mlflow.log_param("features", self.features)
                 if registered_model_name is None:
-                    mlflow.pytorch.log_model(artifact_path="AnomalyNN", python_model=self.model)
+                    mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path="AnomalyNN")
                 else:
-                    mlflow.pytorch.log_model(artifact_path="AnomalyNN", python_model=self.model, registered_model_name = registered_model_name)
+                    mlflow.pytorch.log_model(artifact_path="AnomalyNN", pytorch_model=self.model, registered_model_name = registered_model_name)
                 mlflow.end_run()
             return True
         except Exception as e:
