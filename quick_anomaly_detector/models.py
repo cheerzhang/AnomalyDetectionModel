@@ -351,6 +351,9 @@ class TrainAnomalyNN:
         self.valid_loss_arr = []
         self.train_min_values = None
         self.train_max_values = None
+        self.trainset = None
+        self.validset = None
+        self.features = None
     
     def _normalize_data(self, X, isValid=False):
         """
@@ -374,7 +377,7 @@ class TrainAnomalyNN:
         normalized_data = (X - min_vals) / (max_vals - min_vals)
         return normalized_data
     
-    def train(self, X_train, X_valid):
+    def train(self, train_df, valid_df, features = None):
         """
         Trains the anomaly detection neural network.
 
@@ -382,6 +385,10 @@ class TrainAnomalyNN:
         - X_train (numpy.ndarray): The training data.
         - X_valid (numpy.ndarray): The validation data.
         """
+        if features:
+            self.features = features
+        X_train = train_df[self.features].values
+        X_valid = valid_df[self.features].values
         # Normalize training and validation data
         normalized_training_data = self._normalize_data(X_train)
         normalized_validation_data = self._normalize_data(X_valid, True)
@@ -445,16 +452,62 @@ class TrainAnomalyNN:
         - predictions (torch.Tensor): Tensor containing the predictions (1 for anomaly, 0 for normal) for each input sample.
         - reconstruction_loss: Tensor containing the loss of reconstructed_data
         """
+        X_ = X[self.features].values
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
         with torch.no_grad():
-            normalized_data = self._normalize_data(X, True)
+            normalized_data = self._normalize_data(X_, True)
             X_tensor = torch.tensor(normalized_data, dtype=torch.float32)
             self.model.eval()
             reconstructed_data = self.model(X_tensor)
             reconstruction_loss = torch.mean(torch.square(X_tensor - reconstructed_data), dim=1)
             predictions = (reconstruction_loss > threshold).int()
         return predictions, reconstruction_loss
+
+    def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
+        """
+        If you need credential, make sure you have them in your environment:   
+
+        .. code-block:: python
+
+            os.environ['AWS_ACCESS_KEY_ID'] = os.environ.get("AWS_ACCESS_KEY_ID")
+            os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ.get("AWS_SECRET_ACCESS_KEY")
+            os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
+            os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
+        """
+        try:
+            mlflow.set_tracking_uri(model_uri)
+            mlflow.set_experiment(experiment_id)
+            now = datetime.datetime.now()
+            with mlflow.start_run(experiment_id=experiment_id, run_name=f"{r_name}_{now}") as run:
+                trainset = mlflow.data.from_pandas(self.trainset)
+                validset = mlflow.data.from_pandas(self.validset)
+                mlflow.log_input(trainset, context="trainset")
+                mlflow.log_input(validset, context="validset")
+                for metric_name, metric_value in metrics.items():
+                    if isinstance(metric_value, (int, float)):
+                        mlflow.log_metric(metric_name, metric_value)
+                mlflow.log_param("input_dim", self.input_dim)
+                mlflow.log_param("lr", self.lr)
+                mlflow.log_param("stop_step", self.stop_step)
+                mlflow.log_param("best_loss", self.best_loss)
+                mlflow.log_param("train_min_values", self.train_min_values)
+                mlflow.log_param("train_max_values", self.train_max_values)
+                mlflow.log_param("features", self.features)
+                mlflow.log_param("features", self.features)
+                mlflow.log_param("features", self.features)
+                mlflow.log_param("features", self.features)
+                mlflow.log_param("features", self.features)
+                if registered_model_name is None:
+                    mlflow.pytorch.log_model(artifact_path="AnomalyNN", python_model=self.model)
+                else:
+                    mlflow.pytorch.log_model(artifact_path="AnomalyNN", python_model=self.model, registered_model_name = registered_model_name)
+                mlflow.end_run()
+            return True
+        except Exception as e:
+            raise e
+
+
 
 
 
