@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name='quick-anomaly-detector',
-    version='0.1.73',
+    version='0.1.74',
     author="ZhangLe",
     author_email="zhangle@gmail.com",
     description="models class for quick Anomaly Detection",
@@ -32,7 +32,8 @@ setuptools.setup(
         'cdifflib >= 1.2.6',
         'torch >= 2.2.0',
         'scikit-learn >= 1.4.0',
-        'xgboost >= 2.0.3'
+        'xgboost >= 2.0.3',
+        'mlflow >= 2.10.2',
     ],
     python_requires=">=3.9",
 )
