@@ -13,6 +13,8 @@ import torch.optim as optim
 
 import xgboost as xgb
 
+import mlflow, datetime
+
 #########################################
 #   Gaussian Based Anomaly Detection    #
 #########################################
@@ -758,8 +760,12 @@ class trainXGB:
         self.model = None
         self.train_loss_arr = None
         self.valid_loss_arr = None
+        self.trainset = None
+        self.validset = None
     def train(self, train_df, valid_df, features, label = None):
         self.features = features
+        self.trainset = train_df
+        self.validset = valid_df
         if label is not None:
             self.label = label
         x_train = train_df[self.features].values
@@ -802,6 +808,41 @@ class trainXGB:
         fig, ax = plt.subplots()
         xgb.plot_importance(self.model, ax=ax)
         return fig
+    def log_model(self, model_uri, experiment_id=0, metrics={}, registered_model_name = None):
+        """
+        If you need credential, make sure you have them in your environment:   
+
+        .. code-block:: python
+        
+            os.environ['AWS_ACCESS_KEY_ID'] = os.environ.get("AWS_ACCESS_KEY_ID")
+            os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ.get("AWS_SECRET_ACCESS_KEY")
+            os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
+            os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
+        """
+        try:
+            mlflow.set_tracking_uri(model_uri)
+            mlflow.set_experiment(experiment_id)
+            now = datetime.datetime.now()
+            with mlflow.start_run(experiment_id=experiment_id, run_name=f"run_{now}") as run:
+                trainset = mlflow.data.from_pandas(self.trainset[self.features + [self.label]], targets=self.label)
+                validset = mlflow.data.from_pandas(self.validset[self.features + [self.label]], targets=self.label)
+                mlflow.log_input(trainset, context="trainset")
+                mlflow.log_input(validset, context="validset")
+                for metric_name, metric_value in metrics.items():
+                    if isinstance(metric_value, (int, float)):
+                        mlflow.log_metric(metric_name, metric_value)
+                for param_name, param_value in self.model_params.items():
+                    mlflow.log_param(param_name, param_value)
+                if registered_model_name is None:
+                    mlflow.xgboost.log_model(xgb_model=self.model, artifact_path='xgb')
+                else:
+                    mlflow.xgboost.log_model(
+                        xgb_model=self.model, 
+                        artifact_path='xgb',
+                        registered_model_name=registered_model_name)
+            return True
+        except Exception as e:
+            raise e
 
 
 #########################################
@@ -1192,3 +1233,9 @@ class Padding(BaseEstimator, TransformerMixin):
             self.max_lengths[col] = max_length
             X_[col] = X_[col].str.pad(width=max_length, side='right', fillchar='-')
         return X_
+
+
+
+#####################################
+#    Log Model to ML Flow           #
+#####################################
