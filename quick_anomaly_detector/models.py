@@ -376,6 +376,8 @@ class TrainAnomalyNN:
         - X_train (numpy.ndarray): The training data.
         - X_valid (numpy.ndarray): The validation data.
         """
+        self.trainset = train_df
+        self.validset = valid_df
         if features is not None:
             self.features = features
         X_train = train_df[self.features].values
