@@ -808,22 +808,24 @@ class trainXGB:
         fig, ax = plt.subplots()
         xgb.plot_importance(self.model, ax=ax)
         return fig
-    def log_model(self, model_uri, experiment_id=0, metrics={}, registered_model_name = None):
+    def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
         """
         If you need credential, make sure you have them in your environment:   
 
         .. code-block:: python
-        
+
             os.environ['AWS_ACCESS_KEY_ID'] = os.environ.get("AWS_ACCESS_KEY_ID")
             os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ.get("AWS_SECRET_ACCESS_KEY")
             os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
             os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
         """
+        if self.model is None:
+            raise ValueError("Model has not been trained yet.")
         try:
             mlflow.set_tracking_uri(model_uri)
             mlflow.set_experiment(experiment_id)
             now = datetime.datetime.now()
-            with mlflow.start_run(experiment_id=experiment_id, run_name=f"run_{now}") as run:
+            with mlflow.start_run(experiment_id=experiment_id, run_name=f"{r_name}_{now}") as run:
                 trainset = mlflow.data.from_pandas(self.trainset[self.features + [self.label]], targets=self.label)
                 validset = mlflow.data.from_pandas(self.validset[self.features + [self.label]], targets=self.label)
                 mlflow.log_input(trainset, context="trainset")
@@ -840,6 +842,7 @@ class trainXGB:
                         xgb_model=self.model, 
                         artifact_path='xgb',
                         registered_model_name=registered_model_name)
+                mlflow.end_run()
             return True
         except Exception as e:
             raise e
