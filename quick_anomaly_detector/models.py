@@ -151,8 +151,6 @@ class AnomalyGaussianModel:
             os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'https://<endpoint>.<domain>.com'
             os.environ['MLFLOW_S3_BUCKET'] = 'bucketname'
         """
-        if self.model is None:
-            raise ValueError("Model has not been trained yet.")
         try:
             mlflow.set_tracking_uri(model_uri)
             mlflow.set_experiment(experiment_id)
