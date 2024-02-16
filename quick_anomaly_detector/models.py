@@ -690,14 +690,15 @@ class TrainEmbedding:
         x_dataset = TensorDataset(x_sequences, x_labels)
         x_loader = DataLoader(x_dataset, batch_size=self.batch_size, shuffle=False)
         predictions = []
-        labels = []
         self.model.eval()
         with torch.no_grad():
             for x_sequences, x_labels in x_loader:
                 x_output = self.model(x_sequences)
                 x_probs = torch.softmax(x_output, dim=1)
-                predictions = x_probs[:, 1].tolist()
-                labels = labels + x_labels.tolist()
+                print(x_probs.size())
+                predictions.append(x_probs[:, 1].tolist())
+                print(len(predictions))
+                # labels = labels + x_labels.tolist()
         return predictions
     def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
         """
