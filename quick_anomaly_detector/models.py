@@ -695,8 +695,8 @@ class TrainEmbedding:
             for x_sequences, x_labels in x_loader:
                 x_output = self.model(x_sequences)
                 x_probs = torch.softmax(x_output, dim=1)
-                print(x_probs.size())
-                predictions.append(x_probs[:, 1].tolist())
+                print(len(x_probs[:, 1].tolist()))
+                predictions = predictions + x_probs[:, 1].tolist()
                 print(len(predictions))
                 # labels = labels + x_labels.tolist()
         return predictions
