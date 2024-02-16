@@ -696,9 +696,7 @@ class TrainEmbedding:
             for x_sequences, x_labels in x_loader:
                 x_output = self.model(x_sequences)
                 x_probs = torch.softmax(x_output, dim=1)
-                x_preds = torch.argmax(x_probs, dim=1)
-                item_preds = [item for item in x_preds.tolist()]
-                predictions = predictions + item_preds
+                predictions = x_probs[:, 1].tolist()
                 labels = labels + x_labels.tolist()
         return predictions
     def log_model(self, model_uri, experiment_id=0, r_name = "run", metrics={}, registered_model_name = None):
