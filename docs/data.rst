@@ -22,3 +22,4 @@ Data Process
    data_process.category_hist_graph
 
    data_process.check_wrong
+   data_process.parse_dates
