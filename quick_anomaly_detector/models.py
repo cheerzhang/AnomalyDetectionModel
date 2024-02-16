@@ -876,7 +876,7 @@ class TrainClassificationNN:
 #########################################
 class trainXGB:
     """Train XGB model"""
-    def __init__(self, num_epochs = 1000, patience = 5, lr=0.01, subsample=0.6, colsample_bytree=0.6):
+    def __init__(self, num_epochs = 1000, patience = 5, lr=0.01, subsample=0.6, colsample_bytree=0.6, reg_alpha = 1):
         self.features = []
         self.label = 'label'
         self.patience = patience
@@ -890,8 +890,8 @@ class trainXGB:
             'colsample_bytree': colsample_bytree,
             'seed': 42,
             'n_jobs': -1,
-            'reg_alpha': 1,
-            'reg_lambda': 0
+            'reg_alpha': reg_alpha, # L1 regularization
+            'reg_lambda': 0 # L2
         }
         self.model = None
         self.train_loss_arr = None
