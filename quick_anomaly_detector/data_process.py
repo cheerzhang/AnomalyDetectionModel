@@ -3,7 +3,7 @@ from matplotlib.cm import ScalarMappable
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, f1_score, roc_curve
 import pandas as pd
 import numpy as np
-import torch, re, warnings
+import torch, re, warnings, json
 
 #########################################
 #             Histogram graph           #
@@ -327,4 +327,30 @@ def parse_dates(df, date_column_name, format=None):
     else:
         # Parse with the specified format
         return apply_date_parser(pd.to_datetime, format=format)
-    
+
+
+
+
+################################################################
+#              Get value from df's json column                 #
+################################################################
+# function to get value of node in json
+def process_json(row, key_names):
+    try:
+        parsed_json = json.loads(row)
+        value = parsed_json
+        for key in key_names:
+            if key in value:
+                value = value[key]
+            else:
+                return None
+        return value
+    except (json.JSONDecodeError, TypeError, KeyError):
+        return None
+
+def get_feature_from_json(df, json_column_name, key_names):
+    """ get value of json columns by keys"""
+    df_copy = df.copy()
+    df_copy.loc[:, 'json_feature'] = df[json_column_name].apply(process_json, args=(key_names,))
+    return df_copy['json_feature'].values
+
