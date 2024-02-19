@@ -927,6 +927,7 @@ class trainXGB:
         )
         self.train_loss_arr = evals_result['train']['logloss']
         self.valid_loss_arr = evals_result['valid']['logloss']
+        self.model.feature_names = self.features
     def predict(self, X, features = None, label=None):
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
