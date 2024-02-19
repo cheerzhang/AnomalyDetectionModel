@@ -974,7 +974,8 @@ class trainXGB:
                     mlflow.log_param(param_name, param_value)
                 mlflow.log_param('features', self.features)
                 from mlflow.models import infer_signature
-                signature = infer_signature(self.trainset[self.features], self.model.predict(self.trainset[self.features]))
+                dtrain = xgb.DMatrix(self.trainset[self.features].values, label=None, feature_names=self.features)
+                signature = infer_signature(dtrain, self.model.predict(self.trainset[self.features]))
                 if registered_model_name is None:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
