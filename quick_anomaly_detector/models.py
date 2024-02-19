@@ -13,6 +13,7 @@ import torch.optim as optim
 
 import xgboost as xgb
 
+from mlflow.models import infer_signature
 import mlflow, datetime
 
 #########################################
@@ -939,7 +940,6 @@ class trainXGB:
         y_test = X[[self.label]].values
         dtest = xgb.DMatrix(x_test, label=y_test, feature_names=self.features)
         pred_ = self.model.predict(dtest)
-        from mlflow.models import infer_signature
         self.signature = infer_signature(X[self.features], pred_)
         return pred_
     def display_feature_importance(self):
@@ -985,6 +985,7 @@ class trainXGB:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
                         artifact_path='xgb',
+                        signature=self.signature,
                         registered_model_name=registered_model_name)
                 mlflow.end_run()
             return True
