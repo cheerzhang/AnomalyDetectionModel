@@ -940,7 +940,7 @@ class trainXGB:
         dtest = xgb.DMatrix(x_test, label=y_test, feature_names=self.features)
         pred_ = self.model.predict(dtest)
         from mlflow.models import infer_signature
-        self.signature = infer_signature(x_test, pred_)
+        self.signature = infer_signature(X[self.features], pred_)
         return pred_
     def display_feature_importance(self):
         """display importance of xgb model"""
