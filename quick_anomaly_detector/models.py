@@ -973,10 +973,13 @@ class trainXGB:
                 for param_name, param_value in self.model_params.items():
                     mlflow.log_param(param_name, param_value)
                 mlflow.log_param('features', self.features)
+                from mlflow.models import infer_signature
+                signature = infer_signature(self.train_df[self.features], self.model.predict(self.train_df[self.features]))
                 if registered_model_name is None:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
-                        artifact_path='xgb')
+                        artifact_path='xgb',
+                        signature=signature)
                 else:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
