@@ -939,6 +939,8 @@ class trainXGB:
         y_test = X[[self.label]].values
         dtest = xgb.DMatrix(x_test, label=y_test, feature_names=self.features)
         pred_ = self.model.predict(dtest)
+        from mlflow.models import infer_signature
+        self.signature = infer_signature(x_test, pred_)
         return pred_
     def display_feature_importance(self):
         """display importance of xgb model"""
@@ -973,14 +975,12 @@ class trainXGB:
                 for param_name, param_value in self.model_params.items():
                     mlflow.log_param(param_name, param_value)
                 mlflow.log_param('features', self.features)
-                from mlflow.models import infer_signature
-                dtest = xgb.DMatrix(self.trainset[self.features].values, label=None, feature_names=self.features)
-                signature = infer_signature(dtest, self.model.predict(dtest))
+                
                 if registered_model_name is None:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
                         artifact_path='xgb',
-                        signature=signature)
+                        signature=self.signature)
                 else:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
