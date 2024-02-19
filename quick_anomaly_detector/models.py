@@ -972,11 +972,11 @@ class trainXGB:
                         mlflow.log_metric(metric_name, metric_value)
                 for param_name, param_value in self.model_params.items():
                     mlflow.log_param(param_name, param_value)
+                mlflow.log_param('features', self.features)
                 if registered_model_name is None:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
-                        artifact_path='xgb',
-                        feature_names = self.features)
+                        artifact_path='xgb')
                 else:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
