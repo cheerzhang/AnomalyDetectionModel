@@ -328,8 +328,16 @@ def parse_dates(df, date_column_name, format=None):
         # Parse with the specified format
         return apply_date_parser(pd.to_datetime, format=format)
 
-
-
+#########################################
+#  format numeric column              #
+#########################################
+def format_numeric_column(df, numeric_column_name):
+    try:
+        df['numric_column'] = df[numeric_column_name].apply(lambda x: int(x) if x.isdigit() else 0)
+        return df['numric_column'].values
+    except Exception as e:
+        print(e)
+        return None
 
 ################################################################
 #              Get value from df's json column                 #
