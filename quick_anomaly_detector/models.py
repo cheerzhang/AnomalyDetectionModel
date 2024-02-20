@@ -939,8 +939,7 @@ class trainXGB(mlflow.pyfunc.PythonModel):
         if label is not None:
             self.label = label
         x_test = X[self.features].values
-        y_test = X[[self.label]].values
-        dtest = xgb.DMatrix(x_test, label=y_test, feature_names=self.features)
+        dtest = xgb.DMatrix(x_test, label=None, feature_names=self.features)
         pred_ = self.model.predict(dtest)
         self.signature = infer_signature(X[self.features], pred_)
         return pred_
