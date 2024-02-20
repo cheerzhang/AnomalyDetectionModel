@@ -875,7 +875,7 @@ class TrainClassificationNN:
 #########################################
 #      Classification XGB model          #
 #########################################
-class trainXGB:
+class trainXGB(mlflow.pyfunc.PythonModel):
     """Train XGB model"""
     def __init__(self, num_epochs = 1000, patience = 5, lr=0.01, subsample=0.6, colsample_bytree=0.6, reg_alpha = 1):
         self.features = []
