@@ -929,7 +929,9 @@ class trainXGB(mlflow.pyfunc.PythonModel):
         self.train_loss_arr = evals_result['train']['logloss']
         self.valid_loss_arr = evals_result['valid']['logloss']
         self.model.feature_names = self.features
-    def predict(self, X, features = None, label=None):
+    def predict(self, context, model_input=None, params=None):
+        return self.xgb_predict(model_input, params)
+    def xgb_predict(self, X, features = None, label=None):
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
         if features is not None:
@@ -977,10 +979,11 @@ class trainXGB(mlflow.pyfunc.PythonModel):
                 mlflow.log_param('features', self.features)
                 
                 if registered_model_name is None:
-                    mlflow.xgboost.log_model(
-                        xgb_model=self.model, 
-                        artifact_path='xgb',
+                    mlflow.pyfunc.log_model(
+                        artifact_path="custom_xgb_model", 
+                        python_model=self,
                         signature=self.signature)
+                    # mlflow.xgboost.log_model(xgb_model=self.model, artifact_path='xgb',signature=self.signature)
                 else:
                     mlflow.xgboost.log_model(
                         xgb_model=self.model, 
