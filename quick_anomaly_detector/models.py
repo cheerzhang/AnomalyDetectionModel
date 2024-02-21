@@ -683,11 +683,12 @@ class TrainEmbedding:
     def embedding_predict(self, X, y=None):
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
-        X['encoded_features'] = X[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
-        x_sequences = X['encoded_features'].tolist()
+        X_ = X.copy()
+        X_['encoded_features'] = X_[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
+        x_sequences = X_['encoded_features'].tolist()
         x_sequences = self.padding(x_sequences, self.max_length)
-        X[self.label_name] = 0
-        x_labels = X[self.label_name].values
+        X_[self.label_name] = 0
+        x_labels = X_[self.label_name].values
         x_sequences = torch.LongTensor(x_sequences)
         x_labels = torch.LongTensor(x_labels)
         x_dataset = TensorDataset(x_sequences, x_labels)
