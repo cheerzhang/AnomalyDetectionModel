@@ -606,7 +606,6 @@ class TrainEmbedding:
     def train(self, df_train, df_valid, feature_name, label_name):
         self.feature_name = feature_name
         self.label_name = label_name
-        print(self.feature_name)
         df_train['encoded_features'] = df_train[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         df_valid['encoded_features'] = df_valid[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         self.trainset = df_train[['encoded_features', self.label_name]]
@@ -687,7 +686,7 @@ class TrainEmbedding:
         X['encoded_features'] = X[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         x_sequences = X['encoded_features'].tolist()
         x_sequences = self.padding(x_sequences, self.max_length)
-        X[self.label_name] = None
+        X[self.label_name] = 0
         x_labels = X[self.label_name].values
         x_sequences = torch.LongTensor(x_sequences)
         x_labels = torch.LongTensor(x_labels)
