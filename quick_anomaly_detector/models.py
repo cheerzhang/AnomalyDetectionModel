@@ -1153,7 +1153,7 @@ class KMeansModel:
 #####################################
 #      Lower the string             #
 #####################################
-class convertStr(BaseEstimator):
+class ConvertStr(BaseEstimator):
     """
     convertStr class is designed to convert specific columns in a DataFrame to string type. 
     """
