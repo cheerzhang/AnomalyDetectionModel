@@ -739,7 +739,7 @@ class TrainEmbedding(mlflow.pyfunc.PythonModel):
                 mlflow.log_param("features", self.feature_name)
                 if registered_model_name is None:
                     mlflow.pyfunc.log_model(
-                        artifact_path="custom_embedding_model", 
+                        artifact_path="custom_embedding", 
                         python_model=self,
                         signature=self.signature)
                     # mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path="Embedding")
