@@ -679,12 +679,15 @@ class TrainEmbedding:
                 self.stop_step = epoch
                 self.best_loss = best_loss
                 break
-    def predict(self, X, y=None):
+    def predict(self, context, model_input=None, params=None):
+        return self.embedding_predict(model_input, params)
+    def embedding_predict(self, X, y=None):
         if self.model is None:
             raise ValueError("Model has not been trained yet.")
         X['encoded_features'] = X[self.feature_name].apply(lambda name: self.get_encode(name) if isinstance(name, str) else [])
         x_sequences = X['encoded_features'].tolist()
         x_sequences = self.padding(x_sequences, self.max_length)
+        X[self.label_name] = None
         x_labels = X[self.label_name].values
         x_sequences = torch.LongTensor(x_sequences)
         x_labels = torch.LongTensor(x_labels)
@@ -735,7 +738,11 @@ class TrainEmbedding:
                 mlflow.log_param("best_loss", self.best_loss)
                 mlflow.log_param("features", self.feature_name)
                 if registered_model_name is None:
-                    mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path="Embedding")
+                    mlflow.pyfunc.log_model(
+                        artifact_path="custom_embedding_model", 
+                        python_model=self,
+                        signature=self.signature)
+                    # mlflow.pytorch.log_model(pytorch_model=self.model, artifact_path="Embedding")
                 else:
                     mlflow.pytorch.log_model(artifact_path="Embedding", pytorch_model=self.model, registered_model_name = registered_model_name)
                 mlflow.end_run()
