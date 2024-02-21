@@ -558,7 +558,7 @@ class TransformerModel(nn.Module):
         # probabilities = self.softmax(output)
         return output
 
-class TrainEmbedding:
+class TrainEmbedding(mlflow.pyfunc.PythonModel):
     def __init__(self, lr=0.001, num_epochs=1000, patience=10, batch_size=32, 
                  embedding_dim = 4, nhead = 8, d_hid=64, nlayers = 2, dropout = 0.5):
         self.lr = lr
