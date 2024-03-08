@@ -11,6 +11,7 @@ Check out the :doc:`quick_start` section for further information.
    quick_start
    data
    models
+   pipeline
 
 
 Additional Information
