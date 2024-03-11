@@ -5,6 +5,18 @@ import pandas as pd
 import numpy as np
 import torch, re, warnings, json
 
+
+######################################
+#       Load Data, combine Data      #
+######################################
+def combineDataFile(file_arr):
+    df_arr = []
+    for item in file_arr:
+        df_arr.append(pd.read_csv(item))
+    df = pd.concat(df_arr)
+    return df
+
+
 #########################################
 #             Histogram graph           #
 #########################################
