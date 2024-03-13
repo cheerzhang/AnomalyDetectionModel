@@ -24,7 +24,8 @@ class StringClean(BaseEstimator):
 class RemoveInvalidEmail(BaseEstimator):
     def __init__(self, features):
         self.features = features
-        self.email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        self.email_pattern = r'^[\w\.-]+@[\w\.-]+(\.[\w-]+)+$'
+
     def fit(self, X, y=None):
         return self
     def transform(self, X, y=None):
