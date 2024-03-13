@@ -70,4 +70,33 @@ class AggMinMax(BaseEstimator):
         agg_df = X_.groupby(self.groupby)[self.aggcol].agg(min_='min', max_='max')
         return agg_df
 
+class FilterLE(BaseEstimator):
+    def __init__(self, filter_col= None, filter_value = None, isDate=False):
+        self.filter_col = filter_col
+        self.filter_value = filter_value
+        self.isDate = isDate
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        if self.isDate is True:
+            X_[self.filter_col] = pd.to_datetime(X_[self.filter_col])
+        filter_df = X_[X_[self.filter_col]<self.filter_value]
+        return filter_df
+
+
+class FilterGE(BaseEstimator):
+    def __init__(self, filter_col= None, filter_value = None, isDate=False):
+        self.filter_col = filter_col
+        self.filter_value = filter_value
+        self.isDate = isDate
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        if self.isDate is True:
+            X_[self.filter_col] = pd.to_datetime(X_[self.filter_col])
+        filter_df = X_[X_[self.filter_col]>self.filter_value]
+        return filter_df
+
 
