@@ -21,6 +21,19 @@ class StringClean(BaseEstimator):
         return X_
 
 
+class RemoveInvalidEmail(BaseEstimator):
+    def __init__(self, features):
+        self.features = features
+        self.email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        for col in self.features:
+            X_email_df = X_[X_[col].str.contains(self.email_pattern, na=False)]
+        return X_email_df
+
+
 
 class DateTypeConvert(BaseEstimator):
     """
